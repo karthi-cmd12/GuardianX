@@ -1,6 +1,6 @@
 # AGENTS.md
 
-GuardianX — Flask app for AI-powered phishing/scam detection (email, SMS, URL, QR). Runs on Windows with a local venv; repo is **not** a git repo.
+GuardianX — Flask app for AI-powered phishing/scam detection (email, SMS, URL, QR). Runs on Windows with a local venv.
 
 ## Run & verify
 - Start app: `venv\Scripts\python.exe app.py` → http://127.0.0.1:5000 (debug mode). On Windows always invoke Python via `venv\Scripts\python.exe`.
@@ -9,7 +9,7 @@ GuardianX — Flask app for AI-powered phishing/scam detection (email, SMS, URL,
 - `app.py` runs `db.create_all()` at import time on the SQLite DB, so importing it also (re)creates tables. Deleting `guardianx.db` resets all data.
 
 ## Dependencies (gotcha)
-- `requirements.txt` is **stale** — it only lists core Flask packages. The real deps installed in `venv` include `flask-sqlalchemy`, `flask-login`, `flask-dance`, `google-auth-oauthlib`, `googleapiclient`, `joblib`, `nltk`, `sklearn`, `pandas`. Do not assume `pip install -r requirements.txt` reproduces the environment.
+- `requirements.txt` lists the packages the app actually imports (Flask, Werkzeug, Flask-Login, Flask-SQLAlchemy, Flask-Dance, google-auth, google-auth-oauthlib, google-api-python-client, joblib). `nltk`/`sklearn`/`pandas` are installed in `venv` but unused by app code and intentionally not listed.
 
 ## Architecture
 - Entrypoint `app.py` registers all blueprints. A new route file is dead code until imported+registered there. Currently **unregistered**: `routes/admin.py`, `routes/history.py`, `routes/profile.py`, `routes/detector.py`, and the `gmail_auth` blueprint in `gmail/auth.py`.
@@ -18,7 +18,8 @@ GuardianX — Flask app for AI-powered phishing/scam detection (email, SMS, URL,
 - AI is rule/keyword based, not ML. Email analysis: `ai/detector.py:analyze_email()`. Message/SMS analysis: `ai_engine/threat_analyzer.py` + `ai_engine/risk_score.py`. `ai_engine/model_loader.py` loads `ai_engine/threat_model.pkl` when present; it does not exist, so `model_status()` falls back to `RULE_ENGINE`. No training script exists; `sklearn`/`nltk`/`pandas` in venv are unused by app code.
 - DB models: `database/db.py` (User, LoginManager) and `database/email_models.py` (QuarantineEmail, ReportedEmail, SafeEmail). `database/seed.py` is empty.
 
-## Security caveats (don't copy these patterns)
-- Google OAuth client secret is hardcoded in `config.py`, `gmail/oauth.py`, `gmail/service.py`, and `credentials/credentials.json`. `config.py` also sets `SECRET_KEY` twice (hardcoded, then env-with-fallback); the later assignment wins and the earlier hardcoded Google creds block is dead. Never introduce new hardcoded secrets.
-- Uploads are capped at 16 MB via `MAX_CONTENT_LENGTH`; files land in `uploads/`.
+## Security (current setup)
+- Secrets are read from environment variables, never hardcoded: `config.py` uses `SECRET_KEY` (with a dev-only fallback), and `gmail/oauth.py` + `gmail/service.py` use `GOOGLE_OAUTH_CLIENT_ID` / `GOOGLE_OAUTH_CLIENT_SECRET`. Without those Google vars set, Google login is unavailable but the app still imports and runs.
+- `credentials/credentials.json` (the OAuthlib client secret file, used only by the legacy `gmail/auth.py` flow) and the local `guardianx.db` are gitignored — never commit them or any `.env` files.
+- Uploads are capped at 16 MB via `MAX_CONTENT_LENGTH`; files land in `uploads/` (gitignored).
 - Flask-Login guards most pages (`login_view = "auth.login"`); new routes requiring auth should use `@login_required`.
