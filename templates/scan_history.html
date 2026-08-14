@@ -1,0 +1,677 @@
+{% extends "base.html" %}
+
+{% block title %}
+GuardianX | Security Scan History
+{% endblock %}
+
+{% block content %}
+
+<div class="gx-dashboard sxh-page">
+
+    <!-- Sidebar -->
+
+    {% include "components/sidebar.html" %}
+
+    <div class="gx-overlay"></div>
+
+    <!-- Main Content -->
+
+    <main class="gx-main">
+
+        <!-- ==========================
+             Top Bar
+        =========================== -->
+
+        <div class="gx-topbar">
+
+            <button class="gx-hamburger" aria-label="Toggle navigation">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <div class="gx-topbar-title">
+
+                <h1>Security Scan History</h1>
+
+                <p>Review your recent GuardianX security checks and detected threats.</p>
+
+            </div>
+
+            <div class="gx-top-actions">
+
+                <span class="gx-badge gx-badge-info">
+
+                    <span class="gx-pulse-dot"></span>
+
+                    AI Protection Active
+
+                </span>
+
+                <a href="{{ url_for('auth.logout') }}"
+                   class="gx-topbar-logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>Logout</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================
+             Page Header
+        =========================== -->
+
+        <header class="sxh-hero gx-animate-in">
+
+            <div class="sxh-hero-bg" aria-hidden="true"></div>
+
+            <div class="sxh-hero-copy">
+
+                <span class="gx-badge gx-badge-info sxh-hero-badge">
+
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+
+                    Security Scan History
+
+                </span>
+
+                <h1>Security Scan History</h1>
+
+                <p>
+                    Review your recent GuardianX security checks and detected threats.
+                    Only safe summaries are stored &mdash; never your raw content.
+                </p>
+
+            </div>
+
+            <div class="sxh-hero-actions">
+
+                <button type="button"
+                        id="sxhRefreshBtn"
+                        class="gx-btn gx-btn-ghost"
+                        title="Refresh history">
+
+                    <i class="fa-solid fa-rotate"></i>
+
+                    Refresh
+
+                </button>
+
+                <button type="button"
+                        id="sxhClearAllBtn"
+                        class="gx-btn sxh-btn-danger"
+                        title="Delete all of your scan history">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Clear All History
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- ==========================
+             Summary Cards
+        =========================== -->
+
+        <section class="sxh-stats" aria-label="Scan history summary">
+
+            <div class="sxh-stat-card sxh-stat-total gx-animate-in">
+
+                <div class="sxh-stat-icon">
+
+                    <i class="fa-solid fa-activity"></i>
+
+                </div>
+
+                <div class="sxh-stat-info">
+
+                    <span class="sxh-stat-label">Total Scans</span>
+
+                    <h3 id="sxhStatTotal" data-count="0">0</h3>
+
+                </div>
+
+            </div>
+
+            <div class="sxh-stat-card sxh-stat-safe gx-animate-in">
+
+                <div class="sxh-stat-icon">
+
+                    <i class="fa-solid fa-shield-check"></i>
+
+                </div>
+
+                <div class="sxh-stat-info">
+
+                    <span class="sxh-stat-label">Safe</span>
+
+                    <h3 id="sxhStatSafe" data-count="0">0</h3>
+
+                </div>
+
+            </div>
+
+            <div class="sxh-stat-card sxh-stat-suspicious gx-animate-in">
+
+                <div class="sxh-stat-icon">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                </div>
+
+                <div class="sxh-stat-info">
+
+                    <span class="sxh-stat-label">Suspicious</span>
+
+                    <h3 id="sxhStatSuspicious" data-count="0">0</h3>
+
+                </div>
+
+            </div>
+
+            <div class="sxh-stat-card sxh-stat-high gx-animate-in">
+
+                <div class="sxh-stat-icon">
+
+                    <i class="fa-solid fa-shield-virus"></i>
+
+                </div>
+
+                <div class="sxh-stat-info">
+
+                    <span class="sxh-stat-label">High Risk</span>
+
+                    <h3 id="sxhStatHighRisk" data-count="0">0</h3>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Search + Filters + Sort
+        =========================== -->
+
+        <section class="gx-card sxh-filters gx-animate-in"
+                 aria-label="Scan history filters">
+
+            <div class="sxh-filters-grid">
+
+                <div class="sxh-filter-field sxh-filter-search">
+
+                    <label for="sxhSearch">Search</label>
+
+                    <div class="sxh-filter-control">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        <input
+                            type="search"
+                            id="sxhSearch"
+                            placeholder="Search by target summary..."
+                            autocomplete="off"
+                            spellcheck="false">
+
+                    </div>
+
+                </div>
+
+                <div class="sxh-filter-field">
+
+                    <label for="sxhType">Scan Type</label>
+
+                    <select id="sxhType">
+
+                        <option value="">All</option>
+
+                        <option value="Email">Email</option>
+
+                        <option value="URL">URL</option>
+
+                        <option value="Password">Password</option>
+
+                        <option value="SMS">SMS</option>
+
+                        <option value="QR">QR</option>
+
+                    </select>
+
+                </div>
+
+                <div class="sxh-filter-field">
+
+                    <label for="sxhRisk">Risk Level</label>
+
+                    <select id="sxhRisk">
+
+                        <option value="">All Risk Levels</option>
+
+                        <option value="LOW">Low</option>
+
+                        <option value="MEDIUM">Medium</option>
+
+                        <option value="HIGH">High</option>
+
+                    </select>
+
+                </div>
+
+                <div class="sxh-filter-field">
+
+                    <label for="sxhSort">Sort</label>
+
+                    <select id="sxhSort">
+
+                        <option value="newest">Newest</option>
+
+                        <option value="oldest">Oldest</option>
+
+                        <option value="risk_high">Highest Risk</option>
+
+                        <option value="risk_low">Lowest Risk</option>
+
+                    </select>
+
+                </div>
+
+                <div class="sxh-filter-actions">
+
+                    <button type="button"
+                            id="sxhClearFiltersBtn"
+                            class="gx-btn gx-btn-ghost"
+                            title="Clear all filters">
+
+                        <i class="fa-solid fa-filter-circle-xmark"></i>
+
+                        Clear Filters
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Error Banner
+        =========================== -->
+
+        <div id="sxhError"
+             class="sxh-error d-none"
+             role="alert">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+            <span id="sxhErrorMessage"></span>
+
+        </div>
+
+
+        <!-- ==========================
+             Loading State
+        =========================== -->
+
+        <div id="sxhLoading"
+             class="sxh-loading"
+             role="status"
+             aria-live="polite">
+
+            <span class="sxh-spinner" aria-hidden="true"></span>
+
+            <p>Loading your scan history...</p>
+
+        </div>
+
+
+        <!-- ==========================
+             History Table
+        =========================== -->
+
+        <section class="gx-card sxh-table-card gx-animate-in">
+
+            <div class="sxh-table-head">
+
+                <div>
+
+                    <h3>
+
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+
+                        Scan History
+
+                    </h3>
+
+                    <p id="sxhResultMeta">No records yet.</p>
+
+                </div>
+
+                <span id="sxhCountBadge" class="gx-badge gx-badge-info">0 records</span>
+
+            </div>
+
+            <div class="sxh-table-wrap">
+
+                <table class="sxh-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th scope="col">Type</th>
+
+                            <th scope="col">Risk</th>
+
+                            <th scope="col">Score</th>
+
+                            <th scope="col">Verdict</th>
+
+                            <th scope="col">Date / Time</th>
+
+                            <th scope="col">Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="sxhTbody"></tbody>
+
+                </table>
+
+            </div>
+
+            <!-- Empty State -->
+
+            <div id="sxhEmpty" class="sxh-empty d-none">
+
+                <span class="sxh-empty-icon">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                </span>
+
+                <h3 id="sxhEmptyTitle">No security scans yet</h3>
+
+                <p id="sxhEmptyText">
+                    Your completed GuardianX scans will appear here.
+                </p>
+
+                <div class="sxh-empty-actions">
+
+                    <a href="{{ url_for('dashboard.dashboard_home') }}"
+                       class="gx-btn gx-btn-primary">
+
+                        <i class="fa-solid fa-chart-line"></i>
+
+                        Start a Scan
+
+                    </a>
+
+                    <a href="{{ url_for('url_detector.url_detector_home') }}"
+                       class="gx-btn gx-btn-outline">
+
+                        <i class="fa-solid fa-link"></i>
+
+                        Scan URL
+
+                    </a>
+
+                    <a href="{{ url_for('sms_detector.sms_detector_home') }}"
+                       class="gx-btn gx-btn-outline">
+
+                        <i class="fa-solid fa-comment-sms"></i>
+
+                        Scan SMS
+
+                    </a>
+
+                    <a href="{{ url_for('qr_scanner.qr_scanner_home') }}"
+                       class="gx-btn gx-btn-outline">
+
+                        <i class="fa-solid fa-qrcode"></i>
+
+                        Scan QR
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Pagination
+        =========================== -->
+
+        <nav class="sxh-pagination d-none"
+             id="sxhPagination"
+             aria-label="Scan history pagination">
+
+            <button type="button"
+                    id="sxhPrevBtn"
+                    class="gx-btn gx-btn-ghost"
+                    aria-label="Previous page">
+
+                <i class="fa-solid fa-chevron-left"></i>
+
+                Prev
+
+            </button>
+
+            <span id="sxhPageInfo" class="sxh-page-info">Page 1 of 1</span>
+
+            <button type="button"
+                    id="sxhNextBtn"
+                    class="gx-btn gx-btn-ghost"
+                    aria-label="Next page">
+
+                Next
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </button>
+
+        </nav>
+
+    </main>
+
+</div>
+
+
+<!-- ==========================
+     Details Modal
+========================== -->
+
+<div class="modal fade"
+     id="sxhDetailsModal"
+     tabindex="-1"
+     aria-labelledby="sxhDetailsTitle"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content sxh-modal-content">
+
+            <div class="sxh-modal-head">
+
+                <h3 id="sxhDetailsTitle">
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                    Scan Details
+
+                </h3>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+
+            </div>
+
+            <div class="sxh-modal-body">
+
+                <div class="sxh-detail-row">
+
+                    <span>Scan Type</span>
+
+                    <strong id="sxhDetailType">&mdash;</strong>
+
+                </div>
+
+                <div class="sxh-detail-row">
+
+                    <span>Risk Level</span>
+
+                    <strong id="sxhDetailRisk" class="sxh-risk-pill">&mdash;</strong>
+
+                </div>
+
+                <div class="sxh-detail-row">
+
+                    <span id="sxhScoreLabel">Risk Score</span>
+
+                    <strong id="sxhDetailScore">&mdash;</strong>
+
+                </div>
+
+                <div class="sxh-detail-row sxh-detail-block">
+
+                    <span>Target</span>
+
+                    <p id="sxhDetailTarget">&mdash;</p>
+
+                </div>
+
+                <div class="sxh-detail-row sxh-detail-block">
+
+                    <span>Verdict</span>
+
+                    <p id="sxhDetailVerdict">&mdash;</p>
+
+                </div>
+
+                <div class="sxh-detail-row sxh-detail-block d-none"
+                     id="sxhDetailIndicatorsRow">
+
+                    <span>Indicators</span>
+
+                    <ul id="sxhDetailIndicators"></ul>
+
+                </div>
+
+                <div class="sxh-detail-row sxh-detail-block d-none"
+                     id="sxhDetailRecommendationRow">
+
+                    <span>Recommendation</span>
+
+                    <p id="sxhDetailRecommendation">&mdash;</p>
+
+                </div>
+
+                <div class="sxh-detail-row">
+
+                    <span>Scanned</span>
+
+                    <strong id="sxhDetailDate">&mdash;</strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================
+     Clear All Confirmation Modal
+========================== -->
+
+<div class="modal fade"
+     id="sxhClearModal"
+     tabindex="-1"
+     aria-labelledby="sxhClearTitle"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content sxh-modal-content sxh-modal-danger">
+
+            <div class="sxh-modal-head">
+
+                <h3 id="sxhClearTitle">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Clear Scan History
+
+                </h3>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+
+            </div>
+
+            <div class="sxh-modal-body">
+
+                <div class="sxh-clear-icon">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                </div>
+
+                <p>
+                    Are you sure you want to delete your scan history?
+                    This action cannot be undone.
+                </p>
+
+            </div>
+
+            <div class="sxh-modal-actions">
+
+                <button type="button"
+                        class="gx-btn gx-btn-ghost"
+                        data-bs-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+                <button type="button"
+                        id="sxhConfirmClearBtn"
+                        class="gx-btn sxh-btn-danger">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Delete All History
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

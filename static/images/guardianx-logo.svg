@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none" role="img" aria-label="GuardianX">
+  <defs>
+    <linearGradient id="gxLogo" x1="8" y1="2" x2="40" y2="46" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00C6FF"/>
+      <stop offset="1" stop-color="#7B2FF7"/>
+    </linearGradient>
+    <linearGradient id="gxWord" x1="152" y1="14" x2="196" y2="36" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00C6FF"/>
+      <stop offset="1" stop-color="#7B2FF7"/>
+    </linearGradient>
+    <filter id="gxLogoGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <g>
+    <path d="M24 3.6 L40.9 13.4 L40.9 32.6 L24 42.4 L7.1 32.6 L7.1 13.4 Z" fill="url(#gxLogo)" filter="url(#gxLogoGlow)" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1"/>
+    <path d="M17.2 17.4 L30.8 30.6 M30.8 17.4 L17.2 30.6" stroke="#ffffff" stroke-width="4.6" stroke-linecap="round" opacity="0.96"/>
+  </g>
+  <text x="54" y="31.5" font-family="'Space Grotesk','Inter','Segoe UI',sans-serif" font-size="27" font-weight="700" fill="#F4F7FF" letter-spacing="0.4">Guardian<tspan fill="url(#gxWord)">X</tspan></text>
+</svg>

@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+
+{% block title %}
+GuardianX | Quarantine
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="gx-dashboard">
+
+
+<!-- Sidebar -->
+
+{% include "components/sidebar.html" %}
+
+<div class="gx-overlay"></div>
+
+
+
+
+
+<!-- Main Content -->
+
+
+<main class="gx-main">
+
+
+
+<div class="gx-topbar">
+
+<button class="gx-hamburger" aria-label="Toggle navigation">
+
+<i class="fa-solid fa-bars"></i>
+
+</button>
+
+<div class="gx-topbar-title">
+
+<h1>Quarantine Center</h1>
+
+<p>
+Dangerous emails isolated by GuardianX AI.
+</p>
+
+</div>
+
+<div class="gx-top-actions">
+
+<span class="gx-badge gx-badge-danger">
+
+<i class="fa-solid fa-box-archive"></i>
+
+{{ emails|length }} Quarantined
+
+</span>
+
+<a href="{{ url_for('auth.logout') }}"
+   class="gx-topbar-logout">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+<span>Logout</span>
+
+</a>
+
+</div>
+
+</div>
+
+
+
+
+
+<!-- Navigation -->
+
+
+<div class="email-navigation">
+
+
+<a href="{{ url_for('email_detector.email_detector_home') }}">
+
+<i class="fa-solid fa-envelope-open-text"></i>
+
+Scanner
+
+</a>
+
+
+
+<a class="active"
+href="{{ url_for('quarantine.quarantine_page') }}">
+
+<i class="fa-solid fa-box-archive"></i>
+
+Quarantine
+
+</a>
+
+
+
+<a href="{{ url_for('reported.reported_page') }}">
+
+<i class="fa-solid fa-flag"></i>
+
+Reported
+
+</a>
+
+
+
+<a href="{{ url_for('safe.safe_page') }}">
+
+<i class="fa-solid fa-circle-check"></i>
+
+Safe Emails
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+<section class="email-page-panel">
+
+
+
+<div class="email-page-header">
+
+
+<div>
+
+<h2>
+
+<i class="fa-solid fa-box-archive"></i>
+
+Quarantined Emails
+
+</h2>
+
+
+<p>
+
+Emails blocked because they contain possible threats.
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+{% if emails %}
+
+
+
+<table class="email-table">
+
+
+<thead>
+
+<tr>
+
+<th>Sender</th>
+
+<th>Subject</th>
+
+<th>Risk</th>
+
+<th>Date</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+<tbody>
+
+
+{% for email in emails %}
+
+
+<tr>
+
+
+<td>
+
+{{ email.sender }}
+
+</td>
+
+
+<td>
+
+{{ email.subject }}
+
+</td>
+
+
+
+<td>
+
+<span class="status-danger">
+
+{{ email.risk_score }}%
+
+</span>
+
+
+</td>
+
+
+
+<td>
+
+{{ email.created_at.strftime('%d-%m-%Y') }}
+
+</td>
+
+
+
+</tr>
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+
+{% else %}
+
+
+
+<div class="email-empty">
+
+
+<i class="fa-solid fa-box-open"></i>
+
+
+<h3>
+
+No Quarantined Emails
+
+</h3>
+
+
+<p>
+
+Threat emails will appear here automatically.
+
+</p>
+
+
+</div>
+
+
+
+{% endif %}
+
+
+
+</section>
+
+
+
+</main>
+
+
+
+</div>
+
+
+
+{% endblock %}

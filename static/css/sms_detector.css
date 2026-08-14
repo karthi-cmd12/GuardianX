@@ -1,0 +1,1220 @@
+/* ==========================================================
+   GuardianX SMS Scam Detector Premium UI
+   Theme: Dark Cyber Security
+========================================================== */
+
+
+
+/* ===========================
+   Page
+=========================== */
+
+.sms-page{
+
+    min-height:100vh;
+
+    background:
+    radial-gradient(
+        circle at top,
+        #182848,
+        #050816 60%
+    );
+
+    color:white;
+
+}
+
+
+
+/* ===========================
+   Header
+=========================== */
+
+.sms-header h1{
+
+    font-size:clamp(2rem, 4.5vw, 2.6rem);
+
+    font-weight:700;
+
+    letter-spacing:.5px;
+
+}
+
+.sms-header p{
+
+    max-width:560px;
+
+    line-height:1.8;
+
+    margin-top:6px;
+
+}
+
+
+
+/* Header Icon */
+
+.sms-header-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:
+    linear-gradient(
+        135deg,
+        #00c6ff,
+        #7b2ff7
+    );
+
+    color:white;
+
+    font-size:28px;
+
+    box-shadow:
+    0 0 35px rgba(0,198,255,.45);
+
+    animation:smsFloat 6s ease-in-out infinite;
+
+}
+
+
+
+/* Live Status Badge */
+
+.sms-pulse{
+
+    width:10px;
+
+    height:10px;
+
+    border-radius:50%;
+
+    background:#00e676;
+
+    animation:smsPulseGlow 1.5s infinite;
+
+}
+
+
+
+/* ===========================
+   Cards
+=========================== */
+
+.sms-card,
+.sms-result-card{
+
+    position:relative;
+
+    /* Glass card overrides Bootstrap .card default surface */
+    background:
+    rgba(255,255,255,.06);
+
+    backdrop-filter:blur(20px);
+
+    -webkit-backdrop-filter:blur(20px);
+
+    box-shadow:
+    0 20px 50px rgba(0,0,0,.35);
+
+    animation:smsFadeUp .6s ease both;
+
+}
+
+.sms-card:hover,
+.sms-result-card:hover{
+
+    background:
+    rgba(255,255,255,.09);
+
+}
+
+
+
+/* ===========================
+   Input Card
+=========================== */
+
+.sms-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:
+    linear-gradient(
+        135deg,
+        #00c6ff,
+        #7b2ff7
+    );
+
+    color:white;
+
+    font-size:28px;
+
+    box-shadow:
+    0 0 30px rgba(0,198,255,.4);
+
+}
+
+.sms-form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:6px;
+
+}
+
+.sms-card .form-label{
+
+    color:#94a3b8;
+
+    letter-spacing:.3px;
+
+}
+
+.sms-optional{
+
+    font-weight:400;
+
+    font-size:.82rem;
+
+    color:#64748b;
+
+    margin-left:4px;
+
+}
+
+.sms-card .input-group-text{
+
+    background:rgba(0,0,0,.35);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    color:#00c6ff;
+
+}
+
+.sms-card .sms-textarea-icon{
+
+    align-items:flex-start;
+
+    padding-top:14px;
+
+}
+
+.sms-input,
+.sms-textarea{
+
+    background:rgba(0,0,0,.35);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    color:white;
+
+    transition:.3s;
+
+}
+
+.sms-textarea{
+
+    resize:vertical;
+
+    min-height:150px;
+
+    line-height:1.6;
+
+}
+
+.sms-input::placeholder,
+.sms-textarea::placeholder{
+
+    color:#64748b;
+
+}
+
+.sms-input:hover,
+.sms-textarea:hover{
+
+    border-color:rgba(255,255,255,.3);
+
+}
+
+.sms-input:focus,
+.sms-textarea:focus{
+
+    background:rgba(0,0,0,.45);
+
+    border-color:#00c6ff;
+
+    box-shadow:
+    0 0 0 .25rem rgba(0,198,255,.15);
+
+    color:white;
+
+}
+
+.sms-char-count{
+
+    font-size:.78rem;
+
+    color:#64748b;
+
+    margin-top:6px;
+
+    letter-spacing:.5px;
+
+}
+
+.sms-char-count span{
+
+    color:#94a3b8;
+
+    font-weight:600;
+
+}
+
+.sms-actions{
+
+    margin-top:6px;
+
+}
+
+
+
+/* ===========================
+   Buttons
+=========================== */
+
+.sms-btn{
+
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:50px;
+
+}
+
+.sms-btn::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-130%;
+
+    width:60%;
+
+    height:100%;
+
+    background:
+    linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,.25),
+        transparent
+    );
+
+    transform:skewX(-20deg);
+
+    transition:.6s;
+
+}
+
+.sms-btn:hover::after{
+
+    left:150%;
+
+}
+
+.sms-btn:disabled{
+
+    cursor:not-allowed;
+
+    transform:none;
+
+    opacity:.7;
+
+}
+
+.sms-btn-clear{
+
+    background:transparent;
+
+    border:1px solid rgba(255,255,255,.25);
+
+    color:#cbd5e1;
+
+    border-radius:50px;
+
+    transition:.3s;
+
+}
+
+.sms-btn-clear:hover{
+
+    background:rgba(0,198,255,.08);
+
+    border-color:#00c6ff;
+
+    color:#00c6ff;
+
+    transform:translateY(-3px);
+
+    box-shadow:
+    0 10px 25px rgba(0,198,255,.2);
+
+}
+
+.sms-btn:focus-visible,
+.sms-btn-clear:focus-visible{
+
+    outline:3px solid rgba(0,198,255,.6);
+
+    outline-offset:3px;
+
+}
+
+
+
+/* ===========================
+   Loading State
+=========================== */
+
+.sms-loading{
+
+    animation:smsFadeIn .35s ease;
+
+}
+
+.sms-loading i{
+
+    text-shadow:
+    0 0 25px rgba(0,198,255,.5);
+
+}
+
+.sms-loading p{
+
+    letter-spacing:.5px;
+
+}
+
+
+
+/* ===========================
+   Result Card
+=========================== */
+
+.sms-result-card{
+
+    overflow:hidden;
+
+    animation:smsFadeUp .45s ease both;
+
+}
+
+.sms-result-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:0;
+
+    right:0;
+
+    height:4px;
+
+    background:
+    linear-gradient(
+        90deg,
+        #00c6ff,
+        #7b2ff7
+    );
+
+}
+
+/* Risk accent — driven purely by the badge classes the JS
+   applies, without touching the markup */
+
+.sms-result-card:has(.sms-result-badge.bg-danger)::before{
+
+    background:
+    linear-gradient(
+        90deg,
+        #ff4d6d,
+        #ff8fa3
+    );
+
+}
+
+.sms-result-card:has(.sms-result-badge.bg-warning)::before{
+
+    background:
+    linear-gradient(
+        90deg,
+        #ffc857,
+        #ff9f43
+    );
+
+}
+
+.sms-result-card:has(.sms-result-badge.bg-success)::before{
+
+    background:
+    linear-gradient(
+        90deg,
+        #00e676,
+        #00c6ff
+    );
+
+}
+
+
+
+/* Risk Score */
+
+.sms-result-score h3{
+
+    letter-spacing:1.5px;
+
+    /* Theme override of Bootstrap .text-secondary utility */
+    color:#94a3b8 !important;
+
+}
+
+.sms-result-score #resultScore{
+
+    font-size:clamp(3rem, 7vw, 4.4rem);
+
+    font-weight:800;
+
+    line-height:1.05;
+
+    letter-spacing:1px;
+
+}
+
+/* Score reflects the risk color so the verdict is readable at a glance.
+   !important overrides Bootstrap .text-white utility on #resultScore. */
+
+.sms-result-card:has(.sms-result-badge.bg-danger) #resultScore{
+
+    color:#ff4d6d !important;
+
+    text-shadow:0 0 35px rgba(255,77,109,.35);
+
+}
+
+.sms-result-card:has(.sms-result-badge.bg-warning) #resultScore{
+
+    color:#ffc857 !important;
+
+    text-shadow:0 0 35px rgba(255,200,87,.35);
+
+}
+
+.sms-result-card:has(.sms-result-badge.bg-success) #resultScore{
+
+    color:#00e676 !important;
+
+    text-shadow:0 0 35px rgba(0,230,118,.35);
+
+}
+
+.sms-result-badge{
+
+    font-size:.95rem;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+    padding:10px 22px !important;
+
+}
+
+/* Risk Score Meter */
+
+.sms-score-meter{
+
+    height:12px;
+
+    width:100%;
+
+    max-width:420px;
+
+    margin-left:auto;
+
+    margin-right:auto;
+
+    border-radius:50px;
+
+    background:rgba(255,255,255,.08);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    overflow:hidden;
+
+    box-shadow:inset 0 2px 6px rgba(0,0,0,.35);
+
+}
+
+.sms-score-bar{
+
+    height:100%;
+
+    width:0%;
+
+    border-radius:50px;
+
+    background:linear-gradient(90deg,#00e676,#00c6ff);
+
+    transition:width 1s cubic-bezier(.22,1,.36,1), background .3s ease;
+
+}
+
+.sms-score-scale{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    width:100%;
+
+    max-width:420px;
+
+    margin-left:auto;
+
+    margin-right:auto;
+
+    font-size:.68rem;
+
+    font-weight:600;
+
+    letter-spacing:1.5px;
+
+    color:#64748b;
+
+    text-transform:uppercase;
+
+}
+
+/* Meter reflects the risk color from the badge classes */
+
+.sms-result-card:has(.sms-result-badge.bg-danger) .sms-score-bar{
+
+    background:linear-gradient(90deg,#ff4d6d,#ff8fa3);
+
+}
+
+.sms-result-card:has(.sms-result-badge.bg-warning) .sms-score-bar{
+
+    background:linear-gradient(90deg,#ffc857,#ff9f43);
+
+}
+
+
+
+/* Result Sub Boxes */
+
+.sms-result-box{
+
+    background:
+    rgba(255,255,255,.04);
+
+    border:1px solid rgba(255,255,255,.07);
+
+    border-left:3px solid #00c6ff;
+
+    border-radius:14px;
+
+    padding:16px 18px;
+
+    transition:.3s;
+
+}
+
+.sms-result-box:hover{
+
+    background:
+    rgba(255,255,255,.06);
+
+}
+
+.sms-result-box h4{
+
+    color:#94a3b8;
+
+    font-size:.78rem;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+}
+
+.sms-result-box p{
+
+    color:#e2e8f0;
+
+    line-height:1.7;
+
+    margin-top:4px;
+
+}
+
+/* Message Details Grid */
+
+.sms-details-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3, 1fr);
+
+    gap:12px;
+
+    margin-top:12px;
+
+}
+
+.sms-details-grid > div{
+
+    padding:12px 14px;
+
+    background:rgba(255,255,255,.04);
+
+    border:1px solid rgba(255,255,255,.07);
+
+    border-radius:12px;
+
+    transition:.3s;
+
+}
+
+.sms-details-grid > div:hover{
+
+    background:rgba(255,255,255,.07);
+
+    border-color:rgba(0,198,255,.25);
+
+}
+
+.sms-details-grid span{
+
+    display:block;
+
+    font-size:.68rem;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+    color:#64748b;
+
+    margin-bottom:4px;
+
+}
+
+.sms-details-grid strong{
+
+    display:block;
+
+    font-size:.95rem;
+
+    font-weight:600;
+
+    color:#e2e8f0;
+
+    overflow-wrap:anywhere;
+
+    word-break:break-all;
+
+}
+
+/* Analysis Summary Chips */
+
+.sms-analysis-chips{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    margin-top:12px;
+
+}
+
+.sms-chip{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    padding:6px 13px;
+
+    border-radius:999px;
+
+    font-size:.74rem;
+
+    font-weight:700;
+
+    letter-spacing:.5px;
+
+    text-transform:uppercase;
+
+}
+
+.sms-chip-ok{
+
+    background:rgba(0,230,118,.12);
+
+    border:1px solid rgba(0,230,118,.35);
+
+    color:#00e676;
+
+}
+
+.sms-chip-warn{
+
+    background:rgba(255,200,87,.12);
+
+    border:1px solid rgba(255,200,87,.35);
+
+    color:#ffc857;
+
+}
+
+.sms-chip-danger{
+
+    background:rgba(255,77,109,.12);
+
+    border:1px solid rgba(255,77,109,.35);
+
+    color:#ff4d6d;
+
+}
+
+
+
+/* Threat Indicators */
+
+.sms-indicators{
+
+    list-style:none;
+
+    padding:0;
+
+    margin:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+    margin-top:10px;
+
+}
+
+.sms-indicator-item{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:10px;
+
+    padding:11px 14px;
+
+    background:
+    rgba(255,77,109,.08);
+
+    border:1px solid rgba(255,77,109,.2);
+
+    border-radius:10px;
+
+    color:#fda4af;
+
+    font-size:.9rem;
+
+    line-height:1.5;
+
+    transition:.3s;
+
+}
+
+.sms-indicator-item::before{
+
+    font-family:"Font Awesome 6 Free";
+
+    font-weight:900;
+
+    content:"\f06a";
+
+    color:#ff4d6d;
+
+    margin-top:2px;
+
+    flex-shrink:0;
+
+}
+
+.sms-indicator-item:hover{
+
+    background:
+    rgba(255,77,109,.12);
+
+    border-color:rgba(255,77,109,.4);
+
+    transform:translateX(4px);
+
+}
+
+
+
+/* Security Checks */
+
+.sms-checks{
+
+    list-style:none;
+
+    padding:0;
+
+    margin:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+    margin-top:10px;
+
+}
+
+.sms-check-item{
+
+    display:grid;
+
+    grid-template-columns:1fr auto;
+
+    grid-template-rows:auto auto;
+
+    column-gap:14px;
+
+    row-gap:6px;
+
+    padding:14px 16px;
+
+    background:
+    rgba(255,255,255,.04);
+
+    border:1px solid rgba(255,255,255,.07);
+
+    border-radius:12px;
+
+    transition:.3s;
+
+}
+
+.sms-check-item:hover{
+
+    background:
+    rgba(255,255,255,.07);
+
+    border-color:rgba(0,198,255,.25);
+
+    transform:translateX(4px);
+
+}
+
+.sms-check-name{
+
+    grid-column:1;
+
+    grid-row:1;
+
+    font-weight:600;
+
+    color:#e2e8f0;
+
+    font-size:.95rem;
+
+    overflow-wrap:anywhere;
+
+}
+
+.sms-check-risk{
+
+    grid-column:2;
+
+    grid-row:1;
+
+    justify-self:end;
+
+    align-self:center;
+
+    font-size:.7rem;
+
+    font-weight:700;
+
+    letter-spacing:.5px;
+
+    text-transform:uppercase;
+
+    padding:6px 12px;
+
+}
+
+.sms-check-detail{
+
+    grid-column:1 / -1;
+
+    grid-row:2;
+
+    color:#94a3b8;
+
+    font-size:.85rem;
+
+    line-height:1.55;
+
+    overflow-wrap:anywhere;
+
+}
+
+
+
+/* ===========================
+   Keyframes
+=========================== */
+
+@keyframes smsPulseGlow{
+
+    0%{
+
+        box-shadow:
+        0 0 0 0 rgba(0,230,118,.7);
+
+    }
+
+    70%{
+
+        box-shadow:
+        0 0 0 12px rgba(0,230,118,0);
+
+    }
+
+    100%{
+
+        box-shadow:
+        0 0 0 0 rgba(0,230,118,0);
+
+    }
+
+}
+
+@keyframes smsFloat{
+
+    0%,
+    100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-8px);
+
+    }
+
+}
+
+@keyframes smsFadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+@keyframes smsFadeIn{
+
+    from{
+
+        opacity:0;
+
+    }
+
+    to{
+
+        opacity:1;
+
+    }
+
+}
+
+
+
+/* ===========================
+   Responsive - Tablet
+=========================== */
+
+@media(max-width:991px){
+
+    .sms-result-score #resultScore{
+
+        font-size:3.4rem;
+
+    }
+
+}
+
+
+
+/* ===========================
+   Responsive - Mobile
+=========================== */
+
+@media(max-width:575px){
+
+    .sms-header h1{
+
+        font-size:1.9rem;
+
+    }
+
+    .sms-header-icon{
+
+        width:58px;
+
+        height:58px;
+
+        font-size:23px;
+
+    }
+
+    .sms-icon{
+
+        width:60px;
+
+        height:60px;
+
+        font-size:24px;
+
+    }
+
+    .sms-result-score #resultScore{
+
+        font-size:3rem;
+
+    }
+
+    .sms-details-grid{
+
+        grid-template-columns:repeat(2, 1fr);
+
+    }
+
+    .sms-check-item{
+
+        padding:12px 13px;
+
+    }
+
+    .sms-btn-clear{
+
+        font-size:1rem;
+
+    }
+
+}
+
+
+
+/* ===========================
+   Reduced Motion
+=========================== */
+
+@media(prefers-reduced-motion:reduce){
+
+    .sms-header-icon,
+    .sms-pulse,
+    .sms-card,
+    .sms-result-card,
+    .sms-btn::after,
+    .sms-btn-clear,
+    .sms-indicator-item,
+    .sms-check-item,
+    .sms-result-box{
+
+        animation:none !important;
+
+        transition:none !important;
+
+    }
+
+    .sms-btn-clear:hover,
+    .sms-indicator-item:hover,
+    .sms-check-item:hover{
+
+        transform:none;
+
+    }
+
+    html{
+
+        scroll-behavior:auto;
+
+    }
+
+}
+
+
+
+/* ===========================
+   End of File
+=========================== */

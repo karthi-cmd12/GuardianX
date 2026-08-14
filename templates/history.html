@@ -1,0 +1,614 @@
+{% extends "base.html" %}
+
+{% block title %}
+GuardianX | Scan History
+{% endblock %}
+
+{% block content %}
+
+<div class="gx-dashboard sh-page">
+
+    <!-- Sidebar -->
+
+    {% include "components/sidebar.html" %}
+
+    <div class="gx-overlay"></div>
+
+    <!-- Main Content -->
+
+    <main class="gx-main">
+
+        <!-- ==========================
+             Top Bar
+        =========================== -->
+
+        <div class="gx-topbar">
+
+            <button class="gx-hamburger" aria-label="Toggle navigation">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <div class="gx-topbar-title">
+
+                <h1>Scan History</h1>
+
+                <p>Review your recent GuardianX security activity.</p>
+
+            </div>
+
+            <div class="gx-top-actions">
+
+                <span class="gx-badge gx-badge-info">
+
+                    <span class="gx-pulse-dot"></span>
+
+                    AI Protection Active
+
+                </span>
+
+                <a href="{{ url_for('auth.logout') }}"
+                   class="gx-topbar-logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>Logout</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================
+             Page Header
+        =========================== -->
+
+        <header class="sh-hero gx-animate-in">
+
+            <div class="sh-hero-bg" aria-hidden="true"></div>
+
+            <div class="sh-hero-copy">
+
+                <span class="gx-badge gx-badge-info gx-hero-badge">
+
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+
+                    Security Scan History
+
+                </span>
+
+                <h1>Security Scan History</h1>
+
+                <p>
+                    Review your recent GuardianX security activity in one place.
+                    Only safe summaries are kept &mdash; never your raw content.
+                </p>
+
+            </div>
+
+            <div class="sh-hero-actions">
+
+                <button type="button"
+                        id="shRefreshBtn"
+                        class="gx-btn gx-btn-ghost"
+                        title="Refresh history">
+
+                    <i class="fa-solid fa-rotate"></i>
+
+                    Refresh
+
+                </button>
+
+                <button type="button"
+                        id="shClearAllBtn"
+                        class="gx-btn sh-btn-danger"
+                        title="Delete all of your scan history">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Clear All History
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- ==========================
+             Summary Cards
+        =========================== -->
+
+        <section class="sh-stats" aria-label="Scan history summary">
+
+            <div class="sh-stat-card sh-stat-total gx-animate-in">
+
+                <div class="sh-stat-icon">
+
+                    <i class="fa-solid fa-activity"></i>
+
+                </div>
+
+                <div class="sh-stat-info">
+
+                    <span class="sh-stat-label">Total Scans</span>
+
+                    <h3 id="shStatTotal" data-count="0">0</h3>
+
+                </div>
+
+            </div>
+
+            <div class="sh-stat-card sh-stat-safe gx-animate-in">
+
+                <div class="sh-stat-icon">
+
+                    <i class="fa-solid fa-shield-check"></i>
+
+                </div>
+
+                <div class="sh-stat-info">
+
+                    <span class="sh-stat-label">Safe</span>
+
+                    <h3 id="shStatSafe" data-count="0">0</h3>
+
+                </div>
+
+            </div>
+
+            <div class="sh-stat-card sh-stat-suspicious gx-animate-in">
+
+                <div class="sh-stat-icon">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                </div>
+
+                <div class="sh-stat-info">
+
+                    <span class="sh-stat-label">Suspicious</span>
+
+                    <h3 id="shStatSuspicious" data-count="0">0</h3>
+
+                </div>
+
+            </div>
+
+            <div class="sh-stat-card sh-stat-dangerous gx-animate-in">
+
+                <div class="sh-stat-icon">
+
+                    <i class="fa-solid fa-shield-virus"></i>
+
+                </div>
+
+                <div class="sh-stat-info">
+
+                    <span class="sh-stat-label">Dangerous</span>
+
+                    <h3 id="shStatDangerous" data-count="0">0</h3>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Search + Filters
+        =========================== -->
+
+        <section class="gx-card sh-filters gx-animate-in"
+                 aria-label="Scan history filters">
+
+            <div class="sh-filters-grid">
+
+                <div class="sh-filter-field sh-filter-search">
+
+                    <label for="shSearch">Search</label>
+
+                    <div class="sh-filter-control">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        <input
+                            type="search"
+                            id="shSearch"
+                            placeholder="Search by target summary..."
+                            autocomplete="off"
+                            spellcheck="false">
+
+                    </div>
+
+                </div>
+
+                <div class="sh-filter-field">
+
+                    <label for="shType">Scan Type</label>
+
+                    <select id="shType">
+
+                        <option value="">All</option>
+
+                        <option value="Email">Email</option>
+
+                        <option value="URL">URL</option>
+
+                        <option value="SMS">SMS</option>
+
+                        <option value="QR">QR</option>
+
+                        <option value="Password">Password</option>
+
+                    </select>
+
+                </div>
+
+                <div class="sh-filter-field">
+
+                    <label for="shRisk">Risk</label>
+
+                    <select id="shRisk">
+
+                        <option value="">All</option>
+
+                        <option value="LOW">LOW</option>
+
+                        <option value="MEDIUM">MEDIUM</option>
+
+                        <option value="HIGH">HIGH</option>
+
+                    </select>
+
+                </div>
+
+                <div class="sh-filter-field">
+
+                    <label for="shDate">Date</label>
+
+                    <input
+                        type="date"
+                        id="shDate">
+
+                </div>
+
+                <div class="sh-filter-actions">
+
+                    <button type="button"
+                            id="shClearFiltersBtn"
+                            class="gx-btn gx-btn-ghost"
+                            title="Clear all filters">
+
+                        <i class="fa-solid fa-filter-circle-xmark"></i>
+
+                        Clear Filters
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Error Banner
+        =========================== -->
+
+        <div id="shError"
+             class="sh-error d-none"
+             role="alert">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+            <span id="shErrorMessage"></span>
+
+        </div>
+
+
+        <!-- ==========================
+             Loading State
+        =========================== -->
+
+        <div id="shLoading"
+             class="sh-loading"
+             role="status"
+             aria-live="polite">
+
+            <span class="sh-spinner" aria-hidden="true"></span>
+
+            <p>Loading your scan history...</p>
+
+        </div>
+
+
+        <!-- ==========================
+             History Table
+        =========================== -->
+
+        <section class="gx-card sh-table-card gx-animate-in">
+
+            <div class="sh-table-head">
+
+                <div>
+
+                    <h3>
+
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+
+                        Scan History
+
+                    </h3>
+
+                    <p id="shResultMeta">No records yet.</p>
+
+                </div>
+
+                <span id="shCountBadge" class="gx-badge gx-badge-info">0 records</span>
+
+            </div>
+
+            <div class="sh-table-wrap">
+
+                <table class="sh-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th scope="col">Type</th>
+
+                            <th scope="col">Target</th>
+
+                            <th scope="col">Risk</th>
+
+                            <th scope="col">Score</th>
+
+                            <th scope="col">Verdict</th>
+
+                            <th scope="col">Date</th>
+
+                            <th scope="col">Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="shTbody"></tbody>
+
+                </table>
+
+            </div>
+
+            <!-- Empty State -->
+
+            <div id="shEmpty" class="sh-empty d-none">
+
+                <i class="fa-solid fa-clock-rotate-left"></i>
+
+                <h3 id="shEmptyTitle">No scans yet</h3>
+
+                <p id="shEmptyText">
+                    Run a security scan and it will appear here automatically.
+                </p>
+
+                <div class="sh-empty-actions">
+
+                    <a href="{{ url_for('dashboard.dashboard_home') }}"
+                       class="gx-btn gx-btn-primary">
+
+                        <i class="fa-solid fa-chart-line"></i>
+
+                        Go to Dashboard
+
+                    </a>
+
+                    <a href="{{ url_for('url_detector.url_detector_home') }}"
+                       class="gx-btn gx-btn-outline">
+
+                        <i class="fa-solid fa-link"></i>
+
+                        Scan URL
+
+                    </a>
+
+                    <a href="{{ url_for('sms_detector.sms_detector_home') }}"
+                       class="gx-btn gx-btn-outline">
+
+                        <i class="fa-solid fa-comment-sms"></i>
+
+                        Scan SMS
+
+                    </a>
+
+                    <a href="{{ url_for('qr_scanner.qr_scanner_home') }}"
+                       class="gx-btn gx-btn-outline">
+
+                        <i class="fa-solid fa-qrcode"></i>
+
+                        Scan QR
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ==========================
+     Details Modal
+========================== -->
+
+<div class="modal fade"
+     id="shDetailsModal"
+     tabindex="-1"
+     aria-labelledby="shDetailsTitle"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content sh-modal-content">
+
+            <div class="sh-modal-head">
+
+                <h3 id="shDetailsTitle">
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                    Security Scan Details
+
+                </h3>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+
+            </div>
+
+            <div class="sh-modal-body">
+
+                <div class="sh-detail-row">
+
+                    <span>Type</span>
+
+                    <strong id="shDetailType">&mdash;</strong>
+
+                </div>
+
+                <div class="sh-detail-row">
+
+                    <span>Risk</span>
+
+                    <strong id="shDetailRisk" class="sh-risk-pill">&mdash;</strong>
+
+                </div>
+
+                <div class="sh-detail-row">
+
+                    <span>Score</span>
+
+                    <strong id="shDetailScore">&mdash;</strong>
+
+                </div>
+
+                <div class="sh-detail-row sh-detail-block">
+
+                    <span>Verdict</span>
+
+                    <p id="shDetailVerdict">&mdash;</p>
+
+                </div>
+
+                <div class="sh-detail-row sh-detail-block">
+
+                    <span>Target</span>
+
+                    <p id="shDetailTarget">&mdash;</p>
+
+                </div>
+
+                <div class="sh-detail-row">
+
+                    <span>Scanned</span>
+
+                    <strong id="shDetailDate">&mdash;</strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================
+     Clear All Confirmation Modal
+========================== -->
+
+<div class="modal fade"
+     id="shClearModal"
+     tabindex="-1"
+     aria-labelledby="shClearTitle"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content sh-modal-content sh-modal-danger">
+
+            <div class="sh-modal-head">
+
+                <h3 id="shClearTitle">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Clear Scan History
+
+                </h3>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+
+            </div>
+
+            <div class="sh-modal-body">
+
+                <div class="sh-clear-icon">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                </div>
+
+                <p>
+                    Are you sure you want to delete your scan history?
+                    This action cannot be undone.
+                </p>
+
+            </div>
+
+            <div class="sh-modal-actions">
+
+                <button type="button"
+                        class="gx-btn gx-btn-ghost"
+                        data-bs-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+                <button type="button"
+                        id="shConfirmClearBtn"
+                        class="gx-btn sh-btn-danger">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Delete All History
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

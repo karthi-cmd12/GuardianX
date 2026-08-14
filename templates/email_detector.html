@@ -1,0 +1,1218 @@
+{% extends "base.html" %}
+
+{% block title %}
+GuardianX | Email Threat Detector
+{% endblock %}
+
+{% block content %}
+
+<div class="gx-dashboard gx-detector-page">
+
+    <!-- ==========================
+         Sidebar
+    =========================== -->
+
+    {% include "components/sidebar.html" %}
+
+    <div class="gx-overlay"></div>
+
+    <!-- ==========================
+         Main Content
+    =========================== -->
+
+    <main class="gx-main">
+
+        <!-- Top Bar -->
+
+        <div class="gx-topbar">
+
+            <button class="gx-hamburger" aria-label="Toggle navigation">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <div class="gx-topbar-title">
+
+                <h1>Email Threat Detector</h1>
+
+                <p>
+                    Analyze suspicious emails with GuardianX AI-powered threat detection.
+                </p>
+
+            </div>
+
+            <div class="gx-top-actions">
+
+                {% if not gmail_connected %}
+
+                <a href="{{ url_for('google.login') }}"
+                   class="gx-btn gx-btn-primary gx-connect-btn">
+
+                    <i class="fa-brands fa-google"></i>
+
+                    <span class="gx-connect-text">Connect Gmail</span>
+
+                </a>
+
+                {% else %}
+
+                <span class="gx-badge gx-badge-success">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    Gmail Connected
+
+                </span>
+
+                {% endif %}
+
+                <a href="{{ url_for('auth.logout') }}"
+                   class="gx-topbar-logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>Logout</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show gx-animate-in" role="alert">
+
+                    {{ message }}
+
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+                </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- Email Sub Navigation -->
+
+        <div class="email-navigation">
+
+            <a href="{{ url_for('email_detector.email_detector_home') }}"
+               class="active">
+
+                <i class="fa-solid fa-envelope-open-text"></i>
+
+                Scanner
+
+            </a>
+
+            <a href="{{ url_for('quarantine.quarantine_page') }}">
+
+                <i class="fa-solid fa-box-archive"></i>
+
+                Quarantine
+
+            </a>
+
+            <a href="{{ url_for('reported.reported_page') }}">
+
+                <i class="fa-solid fa-flag"></i>
+
+                Reported
+
+            </a>
+
+            <a href="{{ url_for('safe.safe_page') }}">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+                Safe Emails
+
+            </a>
+
+        </div>
+
+
+        <!-- ==========================
+             Page Header
+        =========================== -->
+
+        <header class="gx-detector-hero gx-animate-in">
+
+            <div class="gx-detector-hero-bg" aria-hidden="true"></div>
+
+            <div class="gx-detector-hero-copy">
+
+                <span class="gx-badge gx-badge-info gx-hero-badge">
+
+                    <span class="gx-pulse-dot"></span>
+
+                    AI Protection Active
+
+                </span>
+
+                <h1>Email Threat Detector</h1>
+
+                <p>
+                    Analyze suspicious emails with GuardianX AI-powered threat detection.
+                    Paste the sender, subject and body of any email to reveal phishing,
+                    scam and impersonation signals instantly.
+                </p>
+
+                <div class="gx-hero-meta">
+
+                    <span class="gx-hero-chip">
+
+                        <i class="fa-solid fa-microchip"></i>
+
+                        Rule Engine Active
+
+                    </span>
+
+                    <span class="gx-hero-chip">
+
+                        <i class="fa-solid fa-user-shield"></i>
+
+                        AI Threat Analysis
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="gx-detector-hero-icon" aria-hidden="true">
+
+                <i class="fa-solid fa-envelope-circle-check"></i>
+
+            </div>
+
+        </header>
+
+
+        {% if not gmail_connected %}
+
+        <div class="gx-card gx-connect-banner gx-animate-in">
+
+            <div class="gx-connect-banner-icon">
+
+                <i class="fa-brands fa-google"></i>
+
+            </div>
+
+            <div>
+
+                <h3>Connect your Gmail</h3>
+
+                <p>
+                    GuardianX AI scans every incoming email automatically
+                    once your Gmail account is connected.
+                </p>
+
+            </div>
+
+            <a href="{{ url_for('google.login') }}"
+               class="gx-btn gx-btn-primary">
+
+                <i class="fa-brands fa-google"></i>
+
+                Connect Gmail
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ==========================
+             Statistics
+        =========================== -->
+
+        <section class="gx-stats">
+
+            <div class="gx-stat-card">
+
+                <i class="fa-solid fa-envelope-open-text"></i>
+
+                <div>
+
+                    <h3>{{ emails|length }}</h3>
+
+                    <p>Emails Loaded</p>
+
+                </div>
+
+            </div>
+
+            <div class="gx-stat-card">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+                <div>
+
+                    <h3>{{ emails | selectattr("risk_level","equalto","LOW") | list | length }}</h3>
+
+                    <p>Safe Emails</p>
+
+                </div>
+
+            </div>
+
+            <div class="gx-stat-card">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <div>
+
+                    <h3>{{ emails | selectattr("risk_level","equalto","MEDIUM") | list | length }}</h3>
+
+                    <p>Suspicious</p>
+
+                </div>
+
+            </div>
+
+            <div class="gx-stat-card">
+
+                <i class="fa-solid fa-shield-virus"></i>
+
+                <div>
+
+                    <h3>{{ emails | selectattr("risk_level","equalto","HIGH") | list | length }}</h3>
+
+                    <p>High Risk</p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Manual Email Analyzer
+        =========================== -->
+
+        <section class="gx-card gx-scanner gx-animate-in"
+                 aria-label="Email analyzer">
+
+            <div class="gx-scanner-head">
+
+                <div class="gx-scanner-title">
+
+                    <span class="gx-scanner-icon">
+
+                        <i class="fa-solid fa-brain"></i>
+
+                    </span>
+
+                    <div>
+
+                        <h2>Email Analyzer</h2>
+
+                        <p>
+                            Paste the sender, subject and body of a suspicious email
+                            to run an instant AI security scan.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <span class="gx-badge gx-badge-info">
+
+                    <i class="fa-solid fa-microchip"></i>
+
+                    Rule Engine
+
+                </span>
+
+            </div>
+
+            <form id="emailScanForm" class="gx-scan-form" novalidate>
+
+                <div class="gx-scan-grid">
+
+                    <div class="gx-field">
+
+                        <label for="emailSender">Sender</label>
+
+                        <div class="gx-field-control">
+
+                            <i class="fa-solid fa-user-shield"></i>
+
+                            <input
+                                type="text"
+                                id="emailSender"
+                                name="sender"
+                                placeholder="sender@example.com"
+                                autocomplete="off"
+                                spellcheck="false"
+                                autocapitalize="none">
+
+                        </div>
+
+                    </div>
+
+                    <div class="gx-field">
+
+                        <label for="emailSubject">Subject</label>
+
+                        <div class="gx-field-control">
+
+                            <i class="fa-solid fa-heading"></i>
+
+                            <input
+                                type="text"
+                                id="emailSubject"
+                                name="subject"
+                                placeholder="e.g. Urgent: verify your account"
+                                autocomplete="off"
+                                spellcheck="false">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="gx-field">
+
+                    <label for="emailBody">Email Body</label>
+
+                    <div class="gx-field-control">
+
+                        <i class="fa-solid fa-align-left"></i>
+
+                        <textarea
+                            id="emailBody"
+                            name="body"
+                            rows="6"
+                            placeholder="Paste the full email content here..."></textarea>
+
+                    </div>
+
+                </div>
+
+                <div class="gx-scan-actions">
+
+                    <button type="submit" id="emailScanBtn"
+                            class="gx-btn gx-btn-primary gx-btn-lg gx-scan-btn">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        Analyze Email
+
+                    </button>
+
+                    <button type="button" id="emailClearBtn"
+                            class="gx-btn gx-btn-ghost gx-btn-lg">
+
+                        <i class="fa-solid fa-rotate-left"></i>
+
+                        Clear
+
+                    </button>
+
+                </div>
+
+            </form>
+
+            <!-- Loading State -->
+
+            <div id="emailLoadingState"
+                 class="gx-scan-loading d-none"
+                 role="status"
+                 aria-live="polite">
+
+                <div class="gx-scan-spinner">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                </div>
+
+                <h3>Analyzing Email...</h3>
+
+                <p>GuardianX AI is checking for phishing indicators.</p>
+
+            </div>
+
+            <!-- Scan Output -->
+
+            <div class="gx-scan-output">
+
+                <!-- Error -->
+
+                <div id="emailResultError"
+                     class="gx-scan-error d-none"
+                     role="alert">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    <div>
+
+                        <strong>Scan Failed</strong>
+
+                        <p id="emailErrorMessage"></p>
+
+                    </div>
+
+                </div>
+
+                <!-- Empty State -->
+
+                <div id="emailEmptyState" class="gx-empty gx-scan-empty">
+
+                    <div class="gx-scan-empty-icon">
+
+                        <i class="fa-solid fa-envelope-open-text"></i>
+
+                    </div>
+
+                    <h3>Ready to analyze</h3>
+
+                    <p>
+                        Submit a suspicious email and GuardianX will
+                        evaluate its security risk.
+                    </p>
+
+                </div>
+
+                <!-- Result -->
+
+                <div id="emailResult"
+                     class="gx-scan-result d-none"
+                     aria-live="polite">
+
+                    <div class="gx-scan-result-head">
+
+                        <div class="gx-scan-result-title">
+
+                            <h3>
+
+                                <i class="fa-solid fa-chart-line"></i>
+
+                                Security Analysis
+
+                            </h3>
+
+                            <p>GuardianX AI threat report</p>
+
+                        </div>
+
+                        <span id="emailBadge" class="gx-badge">N/A</span>
+
+                    </div>
+
+                    <div class="gx-risk-grid">
+
+                        <!-- Risk Score -->
+
+                        <div class="gx-risk-card">
+
+                            <h4>Risk Score</h4>
+
+                            <div class="gx-risk-ring">
+
+                                <svg viewBox="0 0 120 120" aria-hidden="true">
+
+                                    <defs>
+
+                                        <linearGradient id="email-ring-gradient"
+                                                        x1="0%" y1="0%"
+                                                        x2="100%" y2="100%">
+
+                                            <stop offset="0%" stop-color="#00C6FF"></stop>
+
+                                            <stop offset="100%" stop-color="#7B2FF7"></stop>
+
+                                        </linearGradient>
+
+                                    </defs>
+
+                                    <circle class="ed-ring-bg" cx="60" cy="60" r="52"></circle>
+
+                                    <circle class="ed-ring-fg" id="emailRingFg"
+                                            cx="60" cy="60" r="52"
+                                            stroke-dasharray="326.7"
+                                            stroke-dashoffset="326.7"></circle>
+
+                                </svg>
+
+                                <div class="gx-risk-value">
+
+                                    <strong id="emailScore">--</strong>
+
+                                    <span>%</span>
+
+                                </div>
+
+                            </div>
+
+                            <div class="gx-risk-meter"
+                                 role="progressbar"
+                                 aria-label="Risk score"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+
+                                <span class="gx-risk-meter-bar" id="emailMeterBar"></span>
+
+                            </div>
+
+                            <span class="gx-risk-label">Risk Level</span>
+
+                        </div>
+
+                        <!-- Verdict + Recommendation -->
+
+                        <div class="gx-risk-details">
+
+                            <div class="gx-result-box gx-result-verdict">
+
+                                <h4>AI Verdict</h4>
+
+                                <p id="emailVerdict">
+                                    No email scanned yet.
+                                </p>
+
+                            </div>
+
+                            <div class="gx-result-box gx-result-reco">
+
+                                <h4>Recommendation</h4>
+
+                                <p id="emailRecommendation">
+                                    Enter email details above to begin the security check.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Threat Indicators -->
+
+                    <div class="gx-result-box gx-result-indicators">
+
+                        <h4>Threat Indicators</h4>
+
+                        <ul id="emailIndicators" class="gx-indicator-list"></ul>
+
+                    </div>
+
+                    <!-- Security Checks -->
+
+                    <div class="gx-result-box gx-result-checks">
+
+                        <h4>Security Checks</h4>
+
+                        <ul id="emailChecks" class="gx-check-list"></ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Email Workspace
+        =========================== -->
+
+        <section class="gx-email-workspace">
+
+            <!-- LEFT PANEL -->
+
+            <div class="gx-email-list">
+
+                <div class="panel-header">
+
+                    <h3>
+
+                        <i class="fa-solid fa-inbox"></i>
+
+                        Inbox
+
+                    </h3>
+
+                </div>
+
+                <form class="gx-search"
+                      method="GET"
+                      action="{{ url_for('email_detector.email_detector_home') }}">
+
+                    <input
+                        type="text"
+                        id="emailSearch"
+                        name="search"
+                        value="{{ search_query }}"
+                        placeholder="Search all Gmail emails...">
+
+                    <button type="submit">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                    </button>
+
+                </form>
+
+                {% if emails %}
+
+                    {% for email in emails %}
+
+                    <a href="{{ url_for('email_detector.email_detector_home', id=email.id) }}"
+                       class="email-item email-search-item {% if selected_email and selected_email.id == email.id %}active{% endif %}">
+
+                        <div class="email-avatar">
+
+                            {{ email.sender[0]|upper }}
+
+                        </div>
+
+                        <div class="email-info">
+
+                            <h4>
+
+                                {{ email.subject }}
+
+                            </h4>
+
+                            <p>
+
+                                {{ email.sender }}
+
+                            </p>
+
+                        </div>
+
+                        <div class="email-risk">
+
+                            {% if email.risk_level == "HIGH" %}
+
+                                <span class="gx-badge gx-badge-danger">
+
+                                    {{ email.risk_score }}%
+
+                                </span>
+
+                            {% elif email.risk_level == "MEDIUM" %}
+
+                                <span class="gx-badge gx-badge-warning">
+
+                                    {{ email.risk_score }}%
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="gx-badge gx-badge-success">
+
+                                    {{ email.risk_score }}%
+
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </a>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="gx-empty">
+
+                        <i class="fa-solid fa-inbox"></i>
+
+                        <h3>No emails found.</h3>
+
+                        <p>Connect Gmail to load your inbox.</p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- RIGHT PANEL -->
+
+            <div class="gx-analysis-panel">
+
+                {% if selected_email %}
+
+                <div class="panel-header">
+
+                    <h3>
+
+                        <i class="fa-solid fa-brain"></i>
+
+                        GuardianX AI Analysis
+
+                    </h3>
+
+                </div>
+
+                <div class="analysis-score">
+
+                    <h1>
+
+                        {{ selected_email.risk_score }}%
+
+                    </h1>
+
+                    {% if selected_email.risk_level == "HIGH" %}
+
+                        <span class="gx-badge gx-badge-danger">HIGH RISK</span>
+
+                    {% elif selected_email.risk_level == "MEDIUM" %}
+
+                        <span class="gx-badge gx-badge-warning">MEDIUM RISK</span>
+
+                    {% else %}
+
+                        <span class="gx-badge gx-badge-success">SAFE</span>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="analysis-box">
+
+                    <h4>
+
+                        AI Verdict
+
+                    </h4>
+
+                    <p>
+
+                        {{ selected_email.verdict }}
+
+                    </p>
+
+                </div>
+
+
+                <!-- Sender Reputation -->
+
+                <div class="analysis-box">
+
+                    <h4>
+
+                        <i class="fa-solid fa-user-shield"></i>
+
+                        Sender Reputation
+
+                    </h4>
+
+                    {% if selected_email.sender_trust_score is defined %}
+
+                        <div class="trust-score">
+
+                            <h2>
+
+                                {{ selected_email.sender_trust_score }}%
+
+                            </h2>
+
+                            {% if selected_email.sender_trust_score >= 80 %}
+
+                                <span class="gx-badge gx-badge-success">Trusted Sender</span>
+
+                            {% elif selected_email.sender_trust_score >= 50 %}
+
+                                <span class="gx-badge gx-badge-warning">Moderate Trust</span>
+
+                            {% else %}
+
+                                <span class="gx-badge gx-badge-danger">Low Trust Sender</span>
+
+                            {% endif %}
+
+                        </div>
+
+                        <p class="mt-3">
+
+                            Sender:
+
+                            <strong>{{ selected_email.sender }}</strong>
+
+                        </p>
+
+                    {% else %}
+
+                        <p class="text-muted">
+
+                            Sender reputation analysis unavailable.
+
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Threat Indicators -->
+
+                <div class="analysis-box">
+
+                    <h4>
+
+                        Threat Indicators
+
+                    </h4>
+
+                    {% if selected_email.indicators %}
+
+                    <ul class="gx-threat-list">
+
+                        {% for threat in selected_email.indicators %}
+
+                        <li>
+
+                            {% if "No suspicious" in threat %}
+
+                            <i class="fa-solid fa-circle-check text-success"></i>
+
+                            {% else %}
+
+                            <i class="fa-solid fa-triangle-exclamation text-warning"></i>
+
+                            {% endif %}
+
+                            <span>{{ threat }}</span>
+
+                        </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                    {% else %}
+
+                    <p>
+
+                        <i class="fa-solid fa-circle-check text-success"></i>
+
+                        No suspicious indicators detected.
+
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Attachment Scanner -->
+
+                <div class="analysis-box">
+
+                    <h4>
+
+                        <i class="fa-solid fa-paperclip"></i>
+
+                        Attachment Security
+
+                    </h4>
+
+                    {% if selected_email.attachments %}
+
+                    <ul class="security-list">
+
+                        {% for file in selected_email.attachments %}
+
+                        <li>
+
+                            <strong>{{ file.name }}</strong>
+
+                            {% if file.risk == "DANGEROUS" %}
+
+                                <span class="gx-badge gx-badge-danger">DANGEROUS</span>
+
+                            {% else %}
+
+                                <span class="gx-badge gx-badge-success">SAFE</span>
+
+                            {% endif %}
+
+                        </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                    {% else %}
+
+                    <p class="text-success">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                        No attachments detected.
+
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- URL Scanner -->
+
+                <div class="analysis-box">
+
+                    <h4>
+
+                        <i class="fa-solid fa-link"></i>
+
+                        URL Security Scanner
+
+                    </h4>
+
+                    {% if selected_email.links %}
+
+                    <ul class="security-list">
+
+                        {% for link in selected_email.links %}
+
+                        <li>
+
+                            <span>{{ link.url }}</span>
+
+                            {% if link.risk == "DANGEROUS" %}
+
+                                <span class="gx-badge gx-badge-danger">SUSPICIOUS</span>
+
+                            {% else %}
+
+                                <span class="gx-badge gx-badge-success">SAFE</span>
+
+                            {% endif %}
+
+                        </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                    {% else %}
+
+                    <p class="text-success">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                        No suspicious links detected.
+
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Email Actions -->
+
+                <div class="analysis-actions">
+
+                    <a href="{{ url_for('email_actions.quarantine_email', email_id=selected_email.id) }}"
+                       class="gx-btn gx-btn-danger">
+
+                        <i class="fa-solid fa-trash"></i>
+
+                        Quarantine
+
+                    </a>
+
+                    <a href="{{ url_for('email_actions.report_email', email_id=selected_email.id) }}"
+                       class="gx-btn gx-btn-warning">
+
+                        <i class="fa-solid fa-flag"></i>
+
+                        Report
+
+                    </a>
+
+                    <a href="{{ url_for('email_actions.mark_safe', email_id=selected_email.id) }}"
+                       class="gx-btn gx-btn-success">
+
+                        <i class="fa-solid fa-check"></i>
+
+                        Mark Safe
+
+                    </a>
+
+                </div>
+
+                {% else %}
+
+                <div class="gx-empty">
+
+                    <i class="fa-solid fa-envelope-open-text"></i>
+
+                    <h3>No Email Selected</h3>
+
+                    <p>
+                        Select an email from the inbox to view its AI security analysis.
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Threat Analytics
+        =========================== -->
+
+        <section class="gx-card gx-threat-analytics gx-animate-in">
+
+            <div class="panel-header">
+
+                <h3>
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                    Threat Analytics
+
+                </h3>
+
+            </div>
+
+            <div class="analytics-grid">
+
+                <div class="analytics-card">
+
+                    <h4>Total Emails</h4>
+
+                    <h2>{{ emails|length }}</h2>
+
+                </div>
+
+                <div class="analytics-card">
+
+                    <h4>Safe</h4>
+
+                    <h2 class="text-success">{{ emails | selectattr("risk_level","equalto","LOW") | list | length }}</h2>
+
+                </div>
+
+                <div class="analytics-card">
+
+                    <h4>Medium Risk</h4>
+
+                    <h2 class="text-warning">{{ emails | selectattr("risk_level","equalto","MEDIUM") | list | length }}</h2>
+
+                </div>
+
+                <div class="analytics-card">
+
+                    <h4>High Risk</h4>
+
+                    <h2 class="text-danger">{{ emails | selectattr("risk_level","equalto","HIGH") | list | length }}</h2>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Recent Scan History
+        =========================== -->
+
+        <section class="gx-card gx-history gx-animate-in">
+
+            <div class="panel-header">
+
+                <h3>
+
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+
+                    Recent Scan History
+
+                </h3>
+
+            </div>
+
+            <table class="gx-history-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Sender</th>
+
+                        <th>Subject</th>
+
+                        <th>Risk</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for email in emails %}
+
+                    <tr>
+
+                        <td>{{ email.sender }}</td>
+
+                        <td>{{ email.subject }}</td>
+
+                        <td>{{ email.risk_score }}%</td>
+
+                        <td>
+
+                            {% if email.risk_level == "HIGH" %}
+
+                                <span class="gx-badge gx-badge-danger">HIGH</span>
+
+                            {% elif email.risk_level == "MEDIUM" %}
+
+                                <span class="gx-badge gx-badge-warning">MEDIUM</span>
+
+                            {% else %}
+
+                                <span class="gx-badge gx-badge-success">SAFE</span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,417 @@
+{% extends "base.html" %}
+
+{% block title %}
+GuardianX | SMS Scam Detector
+{% endblock %}
+
+{% block content %}
+
+<div class="gx-dashboard">
+
+    <!-- Sidebar -->
+
+    {% include "components/sidebar.html" %}
+
+    <div class="gx-overlay"></div>
+
+    <!-- Main Content -->
+
+    <main class="gx-main">
+
+        <!-- ==========================
+             Top Bar
+        =========================== -->
+
+        <div class="gx-topbar">
+
+            <button class="gx-hamburger" aria-label="Toggle navigation">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <div class="gx-topbar-title">
+
+                <h1>SMS Scam Detector</h1>
+
+                <p>Analyze messages before you trust them.</p>
+
+            </div>
+
+            <div class="gx-top-actions">
+
+                <span class="gx-badge gx-badge-success">
+
+                    <span class="sms-pulse me-1"></span>
+
+                    AI Protection Active
+
+                </span>
+
+                <a href="{{ url_for('auth.logout') }}"
+                   class="gx-topbar-logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>Logout</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="container-fluid px-0">
+
+            <div class="row justify-content-center">
+
+                <div class="col-xl-8 col-lg-9">
+
+                    <!-- ==========================
+                         Page Header
+                    =========================== -->
+
+                    <header class="sms-header text-center mb-4 gx-animate-in">
+
+                        <div class="sms-header-icon mx-auto mb-3">
+
+                            <i class="fa-solid fa-comment-sms"></i>
+
+                        </div>
+
+                        <h1 class="fw-bold">
+                            SMS Scam Detector
+                        </h1>
+
+                        <p class="mx-auto">
+                            GuardianX analyzes text messages for
+                            phishing, fraud and scam patterns before
+                            you reply or tap any link.
+                        </p>
+
+                    </header>
+
+
+                    <!-- ==========================
+                         Message Input Card
+                    =========================== -->
+
+                    <section class="sms-card card border-0 shadow-lg rounded-4 p-4 p-md-5 mb-4 gx-animate-in"
+                             aria-label="SMS scanner input">
+
+                        <div class="text-center mb-4">
+
+                            <div class="sms-icon mx-auto">
+
+                                <i class="fa-solid fa-shield-halved"></i>
+
+                            </div>
+
+                            <h2 class="h4 fw-semibold mt-3 mb-1">
+                                Scan an SMS
+                            </h2>
+
+                            <p class="text-secondary mb-0">
+                                Paste the suspicious message. Add the
+                                sender or number if you know it.
+                            </p>
+
+                        </div>
+
+                        <form id="smsScanForm" class="sms-form" novalidate>
+
+                            <div class="mb-4">
+
+                                <label for="senderInput" class="form-label fw-semibold">
+                                    Sender / number <span class="sms-optional">(optional)</span>
+                                </label>
+
+                                <div class="input-group input-group-lg">
+
+                                    <span class="input-group-text">
+
+                                        <i class="fa-solid fa-user"></i>
+
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        class="form-control sms-input"
+                                        id="senderInput"
+                                        name="sender"
+                                        placeholder="e.g. AD-INFO or +91 98765 43210"
+                                        autocomplete="off"
+                                        spellcheck="false">
+
+                                </div>
+
+                            </div>
+
+                            <div class="mb-4">
+
+                                <label for="messageInput" class="form-label fw-semibold">
+                                    Message text
+                                </label>
+
+                                <div class="input-group input-group-lg">
+
+                                    <span class="input-group-text sms-textarea-icon">
+
+                                        <i class="fa-solid fa-comment-sms"></i>
+
+                                    </span>
+
+                                    <textarea
+                                        class="form-control sms-textarea"
+                                        id="messageInput"
+                                        name="message"
+                                        rows="6"
+                                        placeholder="Paste the full SMS message here..."
+                                        autocomplete="off"
+                                        spellcheck="false"
+                                        maxlength="5000"></textarea>
+
+                                </div>
+
+                                <div class="sms-char-count text-end">
+                                    <span id="charCount">0</span> / 5000
+                                </div>
+
+                            </div>
+
+                            <div class="sms-actions d-flex flex-column flex-sm-row gap-3">
+
+                                <button type="submit" id="scanBtn"
+                                        class="sms-btn btn btn-primary btn-lg flex-fill">
+
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    Scan SMS
+
+                                </button>
+
+                                <button type="button" id="clearBtn"
+                                        class="sms-btn-clear btn btn-outline-secondary btn-lg flex-fill">
+
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                    Clear
+
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </section>
+
+
+                    <!-- ==========================
+                         Loading State
+                    =========================== -->
+
+                    <div id="loadingState"
+                         class="sms-loading text-center py-4 d-none"
+                         aria-live="polite">
+
+                        <i class="fa-solid fa-spinner fa-spin fa-3x text-primary"></i>
+
+                        <p class="text-light mt-3 mb-0">
+                            Analyzing SMS security...
+                        </p>
+
+                    </div>
+
+
+                    <!-- ==========================
+                         Result Section
+                    =========================== -->
+
+                    <section id="resultCard"
+                             class="sms-result-card card border-0 shadow-lg rounded-4 p-4 p-md-5 mb-4 d-none"
+                             aria-label="SMS security analysis result">
+
+                        <h2 class="h4 fw-semibold mb-4">
+
+                            <i class="fa-solid fa-chart-line"></i>
+
+                            Security Analysis
+
+                        </h2>
+
+                        <!-- API Error -->
+
+                        <div id="resultError"
+                             class="alert alert-danger d-none"
+                             role="alert">
+
+                            <i class="fa-solid fa-triangle-exclamation me-2"></i>
+
+                            <span id="resultErrorMessage"></span>
+
+                        </div>
+
+                        <!-- Risk Score -->
+
+                        <div class="sms-result-score text-center mb-4">
+
+                            <h3 class="text-secondary small text-uppercase mb-2">
+                                Risk Score
+                            </h3>
+
+                            <div id="resultScore"
+                                 class="display-4 fw-bold text-white">
+                                &mdash;
+                            </div>
+
+                            <span id="resultBadge"
+                                  class="sms-result-badge badge rounded-pill px-4 py-2 mt-2">
+                                N/A
+                            </span>
+
+                            <div class="sms-score-meter mt-4"
+                                 role="progressbar"
+                                 aria-label="Risk score"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+
+                                <div class="sms-score-bar"
+                                     id="resultProgress"></div>
+
+                            </div>
+
+                            <p class="sms-score-scale text-uppercase mt-2 mb-0">
+                                <span>Safe</span>
+                                <span>Risky</span>
+                            </p>
+
+                        </div>
+
+                        <!-- Message Details -->
+
+                        <div class="sms-result-box mb-3">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                Message Details
+                            </h4>
+
+                            <div class="sms-details-grid">
+
+                                <div>
+                                    <span>Sender</span>
+                                    <strong id="resultSender">&mdash;</strong>
+                                </div>
+
+                                <div>
+                                    <span>Sender Type</span>
+                                    <strong id="resultSenderType">&mdash;</strong>
+                                </div>
+
+                                <div>
+                                    <span>Characters</span>
+                                    <strong id="resultChars">&mdash;</strong>
+                                </div>
+
+                                <div>
+                                    <span>Words</span>
+                                    <strong id="resultWords">&mdash;</strong>
+                                </div>
+
+                                <div>
+                                    <span>Links</span>
+                                    <strong id="resultLinks">&mdash;</strong>
+                                </div>
+
+                                <div>
+                                    <span>Phone Mentioned</span>
+                                    <strong id="resultPhone">&mdash;</strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Analysis Summary -->
+
+                        <div class="sms-result-box mb-3">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                Analysis Summary
+                            </h4>
+
+                            <div id="resultAnalysis"
+                                 class="sms-analysis-chips"
+                                 aria-live="polite">
+
+                            </div>
+
+                        </div>
+
+                        <!-- Verdict -->
+
+                        <div class="sms-result-box mb-3">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                AI Verdict
+                            </h4>
+
+                            <p id="resultVerdict" class="mb-0">
+                                No SMS scanned yet.
+                            </p>
+
+                        </div>
+
+                        <!-- Recommendation -->
+
+                        <div class="sms-result-box mb-3">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                Recommendation
+                            </h4>
+
+                            <p id="resultRecommendation" class="mb-0">
+                                Paste a message above to begin the security check.
+                            </p>
+
+                        </div>
+
+                        <!-- Indicators -->
+
+                        <div class="sms-result-box mb-3">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                Threat Indicators
+                            </h4>
+
+                            <ul id="resultIndicators" class="sms-indicators mb-0">
+
+                            </ul>
+
+                        </div>
+
+                        <!-- Security Checks -->
+
+                        <div class="sms-result-box">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                Security Checks
+                            </h4>
+
+                            <ul id="resultChecks" class="sms-checks mb-0">
+
+                            </ul>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+{% endblock %}

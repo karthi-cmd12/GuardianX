@@ -1,0 +1,996 @@
+{% extends "base.html" %}
+
+{% block title %}GuardianX | Profile{% endblock %}
+
+{% block content %}
+
+{% set initials = current_user.full_name[:1]|upper %}
+{% set created = current_user.created_at %}
+{% set total = stats.total %}
+{% set safe = stats.safe %}
+{% set suspicious = stats.suspicious %}
+{% set high_risk = stats.high_risk %}
+
+<div class="gx-dashboard gx-profile">
+
+    <div id="pfSettingsData"
+         class="d-none"
+         data-compact="{{ 'true' if settings.compact_mode else 'false' }}"
+         data-reduced-motion="{{ 'true' if settings.reduced_motion else 'false' }}"
+         data-animations="{{ 'true' if settings.animations_enabled else 'false' }}"></div>
+
+    <!-- Sidebar -->
+
+    {% include "components/sidebar.html" %}
+
+    <div class="gx-overlay"></div>
+
+    <!-- Main Content -->
+
+    <main class="gx-main">
+
+        <!-- ==========================
+             Top Bar
+        =========================== -->
+
+        <div class="gx-topbar">
+
+            <button class="gx-hamburger" aria-label="Toggle navigation">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <div class="gx-topbar-title">
+
+                <h1>My Profile</h1>
+
+                <p>Manage your account and GuardianX preferences.</p>
+
+            </div>
+
+            <div class="gx-top-actions">
+
+                <span class="gx-status-pill" role="status">
+
+                    <span class="gx-pulse-dot"></span>
+
+                    Account Protected
+
+                </span>
+
+                <a href="{{ url_for('auth.logout') }}"
+                   class="gx-topbar-logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>Logout</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show gx-animate-in" role="alert">
+
+                    {{ message }}
+
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+                </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- ==========================
+             Profile Header
+        =========================== -->
+
+        <header class="pf-hero gx-animate-in">
+
+            <div class="pf-hero-bg" aria-hidden="true"></div>
+
+            <div class="pf-avatar-large" aria-hidden="true">
+
+                {{ initials }}
+
+            </div>
+
+            <div class="pf-hero-copy">
+
+                <span class="gx-badge gx-badge-info gx-hero-badge">
+
+                    <i class="fa-solid fa-user-shield"></i>
+
+                    {% if created %}
+                        Member since {{ created.strftime('%B %Y') }}
+                    {% else %}
+                        GuardianX Member
+                    {% endif %}
+
+                </span>
+
+                <h1>{{ current_user.full_name }}</h1>
+
+                <p class="pf-handle">
+
+                    @{{ current_user.username }}
+
+                    <span aria-hidden="true">·</span>
+
+                    {{ current_user.email }}
+
+                </p>
+
+                <div class="pf-hero-meta">
+
+                    <span class="pf-sec-status pf-sec-{{ security.level }}">
+
+                        <i class="fa-solid fa-shield-halved"></i>
+
+                        Security: {{ security.label }}
+
+                    </span>
+
+                    <span class="gx-badge {{ 'gx-badge-success' if protection.email_verified else 'gx-badge-warning' }}">
+
+                        <i class="fa-solid {{ 'fa-circle-check' if protection.email_verified else 'fa-envelope' }}"></i>
+
+                        {{ 'Email Verified' if protection.email_verified else 'Email Not Verified' }}
+
+                    </span>
+
+                    <span class="gx-badge {{ 'gx-badge-success' if protection.mobile_verified else 'gx-badge-warning' }}">
+
+                        <i class="fa-solid {{ 'fa-circle-check' if protection.mobile_verified else 'fa-mobile-screen-button' }}"></i>
+
+                        {{ 'Mobile Verified' if protection.mobile_verified else 'Mobile Not Verified' }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="pf-hero-actions">
+
+                <a href="#pf-edit-card"
+                   class="gx-btn gx-btn-outline">
+
+                    <i class="fa-solid fa-pen"></i>
+
+                    Edit Profile
+
+                </a>
+
+                <a href="{{ url_for('settings.settings_home') }}"
+                   class="gx-btn gx-btn-ghost">
+
+                    <i class="fa-solid fa-gear"></i>
+
+                    Settings
+
+                </a>
+
+            </div>
+
+        </header>
+
+
+        <!-- ==========================
+             GuardianX Statistics
+        =========================== -->
+
+        <section class="pf-stats" aria-label="GuardianX statistics">
+
+            <div class="pf-stat-card pf-stat-total gx-animate-in">
+
+                <div class="pf-stat-icon">
+
+                    <i class="fa-solid fa-activity"></i>
+
+                </div>
+
+                <div class="pf-stat-info">
+
+                    <span class="pf-stat-label">Total Scans</span>
+
+                    <h3 data-count="{{ total }}">{{ total }}</h3>
+
+                    <span class="pf-stat-hint">Across all scanners</span>
+
+                </div>
+
+            </div>
+
+            <div class="pf-stat-card pf-stat-safe gx-animate-in">
+
+                <div class="pf-stat-icon">
+
+                    <i class="fa-solid fa-shield-check"></i>
+
+                </div>
+
+                <div class="pf-stat-info">
+
+                    <span class="pf-stat-label">Safe Scans</span>
+
+                    <h3 data-count="{{ safe }}">{{ safe }}</h3>
+
+                    <span class="pf-stat-hint">No risk detected</span>
+
+                </div>
+
+            </div>
+
+            <div class="pf-stat-card pf-stat-suspicious gx-animate-in">
+
+                <div class="pf-stat-icon">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                </div>
+
+                <div class="pf-stat-info">
+
+                    <span class="pf-stat-label">Suspicious Scans</span>
+
+                    <h3 data-count="{{ suspicious }}">{{ suspicious }}</h3>
+
+                    <span class="pf-stat-hint">Needs review</span>
+
+                </div>
+
+            </div>
+
+            <div class="pf-stat-card pf-stat-high gx-animate-in">
+
+                <div class="pf-stat-icon">
+
+                    <i class="fa-solid fa-shield-virus"></i>
+
+                </div>
+
+                <div class="pf-stat-info">
+
+                    <span class="pf-stat-label">High-Risk Scans</span>
+
+                    <h3 data-count="{{ high_risk }}">{{ high_risk }}</h3>
+
+                    <span class="pf-stat-hint">Threats detected</span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Personal + Security
+        =========================== -->
+
+        <div class="pf-grid">
+
+            <div class="pf-col pf-col-main">
+
+                <!-- ==========================
+                     Personal Information
+                =========================== -->
+
+                <section class="gx-card pf-card gx-animate-in"
+                         id="pf-edit-card">
+
+                    <div class="gx-card-header">
+
+                        <h3>
+
+                            <i class="fa-solid fa-id-card"></i>
+
+                            Personal Information
+
+                        </h3>
+
+                        <p>Keep your account contact details up to date.</p>
+
+                    </div>
+
+                    <div id="pfProfileMsg"
+                         class="pf-msg"
+                         role="status"
+                         aria-live="polite"></div>
+
+                    <form id="pfProfileForm"
+                          novalidate
+                          autocomplete="on">
+
+                        <div class="pf-form-row">
+
+                            <div class="pf-field">
+
+                                <label for="pfFullName">Full Name</label>
+
+                                <input
+                                    type="text"
+                                    id="pfFullName"
+                                    name="full_name"
+                                    class="gx-input"
+                                    value="{{ current_user.full_name }}"
+                                    maxlength="100"
+                                    required
+                                    autocomplete="name">
+
+                            </div>
+
+                            <div class="pf-field">
+
+                                <label for="pfUsername">Username</label>
+
+                                <input
+                                    type="text"
+                                    id="pfUsername"
+                                    class="gx-input"
+                                    value="{{ current_user.username }}"
+                                    disabled
+                                    aria-describedby="pfUsernameNote">
+
+                                <small class="pf-field-note"
+                                       id="pfUsernameNote">
+                                    Username cannot be changed.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                        <div class="pf-form-row">
+
+                            <div class="pf-field">
+
+                                <label for="pfEmail">Email</label>
+
+                                <input
+                                    type="email"
+                                    id="pfEmail"
+                                    name="email"
+                                    class="gx-input"
+                                    value="{{ current_user.email }}"
+                                    maxlength="120"
+                                    required
+                                    autocomplete="email">
+
+                            </div>
+
+                            <div class="pf-field">
+
+                                <label for="pfMobile">Mobile Number</label>
+
+                                <input
+                                    type="tel"
+                                    id="pfMobile"
+                                    name="mobile"
+                                    class="gx-input"
+                                    value="{{ current_user.mobile or '' }}"
+                                    maxlength="20"
+                                    placeholder="+91 98765 43210"
+                                    autocomplete="tel">
+
+                            </div>
+
+                        </div>
+
+                        <div class="pf-form-actions">
+
+                            <button type="submit"
+                                    id="pfProfileSubmit"
+                                    class="gx-btn gx-btn-primary"
+                                    data-loading="Saving...">
+
+                                <i class="fa-solid fa-floppy-disk"></i>
+
+                                Save Changes
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </section>
+
+
+                <!-- ==========================
+                     Account Security
+                =========================== -->
+
+                <section class="gx-card pf-card gx-animate-in"
+                         id="pf-security-card">
+
+                    <div class="gx-card-header">
+
+                        <h3>
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                            Account Security
+
+                        </h3>
+
+                        <p>Password and login security status.</p>
+
+                    </div>
+
+                    <div class="pf-sec-grid">
+
+                        <div class="pf-sec-item">
+
+                            <span class="pf-sec-icon pf-ic-cyan">
+
+                                <i class="fa-solid fa-key"></i>
+
+                            </span>
+
+                            <div class="pf-sec-meta">
+
+                                <strong>Password</strong>
+
+                                <span>
+                                    <span class="pf-dot-sec"></span>
+                                    Secured with strong hashing
+                                </span>
+
+                            </div>
+
+                            <span class="gx-badge gx-badge-success">Active</span>
+
+                        </div>
+
+                        <div class="pf-sec-item">
+
+                            <span class="pf-sec-icon pf-ic-purple">
+
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+
+                            </span>
+
+                            <div class="pf-sec-meta">
+
+                                <strong>Last Password Change</strong>
+
+                                <span>
+                                    {% if settings.last_password_changed %}
+                                        {{ settings.last_password_changed.strftime('%d %b %Y, %I:%M %p') }}
+                                    {% else %}
+                                        Not recorded yet
+                                    {% endif %}
+                                </span>
+
+                            </div>
+
+                            <span class="gx-badge gx-badge-info">Status</span>
+
+                        </div>
+
+                        <div class="pf-sec-item">
+
+                            <span class="pf-sec-icon pf-ic-green">
+
+                                <i class="fa-solid fa-envelope-circle-check"></i>
+
+                            </span>
+
+                            <div class="pf-sec-meta">
+
+                                <strong>Email Verification</strong>
+
+                                <span>
+                                    {% if protection.email_verified %}
+                                        Verified
+                                    {% else %}
+                                        Not verified
+                                    {% endif %}
+                                </span>
+
+                            </div>
+
+                            {% if protection.email_verified %}
+                                <span class="gx-badge gx-badge-success">Done</span>
+                            {% else %}
+                                <a href="{{ url_for('verification.verify_email') }}"
+                                   class="gx-btn gx-btn-ghost gx-btn-sm">Verify</a>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="pf-sec-item">
+
+                            <span class="pf-sec-icon pf-ic-amber">
+
+                                <i class="fa-solid fa-mobile-screen-button"></i>
+
+                            </span>
+
+                            <div class="pf-sec-meta">
+
+                                <strong>Mobile Verification</strong>
+
+                                <span>
+                                    {% if protection.mobile_verified %}
+                                        Verified
+                                    {% elif current_user.mobile %}
+                                        Not verified
+                                    {% else %}
+                                        No mobile set
+                                    {% endif %}
+                                </span>
+
+                            </div>
+
+                            {% if protection.mobile_verified %}
+                                <span class="gx-badge gx-badge-success">Done</span>
+                            {% elif current_user.mobile %}
+                                <a href="{{ url_for('verification.verify_mobile') }}"
+                                   class="gx-btn gx-btn-ghost gx-btn-sm">Verify</a>
+                            {% else %}
+                                <span class="gx-badge gx-badge-warning">Pending</span>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="pf-sec-item">
+
+                            <span class="pf-sec-icon pf-ic-red">
+
+                                <i class="fa-brands fa-google"></i>
+
+                            </span>
+
+                            <div class="pf-sec-meta">
+
+                                <strong>Gmail Connection</strong>
+
+                                <span>
+                                    {% if protection.gmail_connected %}
+                                        Connected
+                                    {% else %}
+                                        Not connected
+                                    {% endif %}
+                                </span>
+
+                            </div>
+
+                            {% if protection.gmail_connected %}
+                                <span class="gx-badge gx-badge-success">Connected</span>
+                            {% else %}
+                                <a href="{{ url_for('google.login') }}"
+                                   class="gx-btn gx-btn-ghost gx-btn-sm">Connect</a>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <div class="pf-sec-actions">
+
+                        <button type="button"
+                                id="pfOpenPwBtn"
+                                class="gx-btn gx-btn-outline"
+                                data-bs-toggle="modal"
+                                data-bs-target="#pfPwModal">
+
+                            <i class="fa-solid fa-lock"></i>
+
+                            Change Password
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <div class="pf-col pf-col-side">
+
+                <!-- ==========================
+                     Quick Actions
+                =========================== -->
+
+                <section class="gx-card pf-card pf-quick gx-animate-in">
+
+                    <div class="gx-card-header">
+
+                        <h3>
+
+                            <i class="fa-solid fa-bolt"></i>
+
+                            Quick Actions
+
+                        </h3>
+
+                        <p>Launch a security scan in one click.</p>
+
+                    </div>
+
+                    <div class="pf-quick-grid">
+
+                        <a href="{{ url_for('url_detector.url_detector_home') }}"
+                           class="pf-quick-link pf-qc-cyan">
+
+                            <span class="pf-quick-icon"><i class="fa-solid fa-link"></i></span>
+
+                            <span>
+                                <strong>Scan URL</strong>
+                                <small>Check links for phishing</small>
+                            </span>
+
+                        </a>
+
+                        <a href="{{ url_for('email_detector.email_detector_home') }}"
+                           class="pf-quick-link pf-qc-blue">
+
+                            <span class="pf-quick-icon"><i class="fa-solid fa-envelope-circle-check"></i></span>
+
+                            <span>
+                                <strong>Scan Email</strong>
+                                <small>Analyze inbox threats</small>
+                            </span>
+
+                        </a>
+
+                        <a href="{{ url_for('password_analyzer.password_analyzer_home') }}"
+                           class="pf-quick-link pf-qc-purple">
+
+                            <span class="pf-quick-icon"><i class="fa-solid fa-key"></i></span>
+
+                            <span>
+                                <strong>Analyze Password</strong>
+                                <small>Test password strength</small>
+                            </span>
+
+                        </a>
+
+                        <a href="{{ url_for('sms_detector.sms_detector_home') }}"
+                           class="pf-quick-link pf-qc-green">
+
+                            <span class="pf-quick-icon"><i class="fa-solid fa-comment-sms"></i></span>
+
+                            <span>
+                                <strong>Scan SMS</strong>
+                                <small>Check messages for scams</small>
+                            </span>
+
+                        </a>
+
+                        <a href="{{ url_for('qr_scanner.qr_scanner_home') }}"
+                           class="pf-quick-link pf-qc-red">
+
+                            <span class="pf-quick-icon"><i class="fa-solid fa-qrcode"></i></span>
+
+                            <span>
+                                <strong>Scan QR</strong>
+                                <small>Verify QR code safety</small>
+                            </span>
+
+                        </a>
+
+                        <a href="{{ url_for('history.history_home') }}"
+                           class="pf-quick-link pf-qc-amber">
+
+                            <span class="pf-quick-icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
+
+                            <span>
+                                <strong>View History</strong>
+                                <small>Review past scans</small>
+                            </span>
+
+                        </a>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================
+                     Statistics Detail
+                =========================== -->
+
+                <section class="gx-card pf-card pf-stats-card gx-animate-in">
+
+                    <div class="gx-card-header">
+
+                        <h3>
+
+                            <i class="fa-solid fa-chart-pie"></i>
+
+                            GuardianX Statistics
+
+                        </h3>
+
+                        <p>Your scan activity at a glance.</p>
+
+                    </div>
+
+                    {% if total > 0 %}
+
+                        {% set pct_safe = ((safe * 100) / total) | round | int %}
+                        {% set pct_suspicious = ((suspicious * 100) / total) | round | int %}
+                        {% set pct_high = ((high_risk * 100) / total) | round | int %}
+
+                        <div class="pf-analy-row">
+
+                            <span class="pf-analy-dot pf-dot-safe"></span>
+
+                            <span class="pf-analy-label">Safe</span>
+
+                            <div class="pf-analy-track">
+
+                                <span class="pf-analy-fill pf-fill-safe"
+                                      style="width: {{ pct_safe }}%"></span>
+
+                            </div>
+
+                            <span class="pf-analy-pct">{{ pct_safe }}%</span>
+
+                        </div>
+
+                        <div class="pf-analy-row">
+
+                            <span class="pf-analy-dot pf-dot-suspicious"></span>
+
+                            <span class="pf-analy-label">Suspicious</span>
+
+                            <div class="pf-analy-track">
+
+                                <span class="pf-analy-fill pf-fill-suspicious"
+                                      style="width: {{ pct_suspicious }}%"></span>
+
+                            </div>
+
+                            <span class="pf-analy-pct">{{ pct_suspicious }}%</span>
+
+                        </div>
+
+                        <div class="pf-analy-row">
+
+                            <span class="pf-analy-dot pf-dot-high"></span>
+
+                            <span class="pf-analy-label">High-Risk</span>
+
+                            <div class="pf-analy-track">
+
+                                <span class="pf-analy-fill pf-fill-high"
+                                      style="width: {{ pct_high }}%"></span>
+
+                            </div>
+
+                            <span class="pf-analy-pct">{{ pct_high }}%</span>
+
+                        </div>
+
+                        <div class="pf-analy-summary">
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                            <p>
+                                <strong>{{ safe }}</strong> of
+                                <strong>{{ total }}</strong> scans were safe.
+                            </p>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="gx-empty">
+
+                            <i class="fa-solid fa-chart-column"></i>
+
+                            <h3>No scans yet</h3>
+
+                            <p>
+                                Statistics populate automatically as you scan
+                                emails, URLs, SMS, QR codes and passwords.
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- ==========================
+     Change Password Modal
+========================== -->
+
+<div class="modal fade"
+     id="pfPwModal"
+     tabindex="-1"
+     aria-labelledby="pfPwTitle"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content pf-modal-content">
+
+            <div class="pf-modal-head">
+
+                <h3 id="pfPwTitle">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    Change Password
+
+                </h3>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+
+            </div>
+
+            <div class="pf-modal-body">
+
+                <div id="pfPwMsg"
+                     class="pf-msg"
+                     role="status"
+                     aria-live="polite"></div>
+
+                <form id="pfPwForm" novalidate>
+
+                    <div class="pf-field">
+
+                        <label for="pfCurrentPw">Current Password</label>
+
+                        <div class="pf-pw-wrap">
+
+                            <input
+                                type="password"
+                                id="pfCurrentPw"
+                                name="current_password"
+                                class="gx-input"
+                                autocomplete="current-password"
+                                required>
+
+                            <button type="button"
+                                    class="pf-pw-toggle"
+                                    data-toggle-for="pfCurrentPw"
+                                    aria-label="Show current password">
+
+                                <i class="fa-regular fa-eye"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="pf-field">
+
+                        <label for="pfNewPw">New Password</label>
+
+                        <div class="pf-pw-wrap">
+
+                            <input
+                                type="password"
+                                id="pfNewPw"
+                                name="new_password"
+                                class="gx-input"
+                                autocomplete="new-password"
+                                required>
+
+                            <button type="button"
+                                    class="pf-pw-toggle"
+                                    data-toggle-for="pfNewPw"
+                                    aria-label="Show new password">
+
+                                <i class="fa-regular fa-eye"></i>
+
+                            </button>
+
+                        </div>
+
+                        <div class="pf-strength">
+
+                            <div class="pf-strength-track">
+
+                                <span class="pf-strength-bar" id="pfStrengthBar"></span>
+
+                            </div>
+
+                            <span class="pf-strength-text" id="pfStrengthText">
+                                Password Strength
+                            </span>
+
+                        </div>
+
+                        <small class="pf-field-note">
+                            At least 12 characters with uppercase, lowercase,
+                            numbers and symbols.
+                        </small>
+
+                    </div>
+
+                    <div class="pf-field">
+
+                        <label for="pfConfirmPw">Confirm New Password</label>
+
+                        <div class="pf-pw-wrap">
+
+                            <input
+                                type="password"
+                                id="pfConfirmPw"
+                                name="confirm_password"
+                                class="gx-input"
+                                autocomplete="new-password"
+                                required>
+
+                            <button type="button"
+                                    class="pf-pw-toggle"
+                                    data-toggle-for="pfConfirmPw"
+                                    aria-label="Show confirmation password">
+
+                                <i class="fa-regular fa-eye"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="pf-modal-actions">
+
+                        <button type="button"
+                                class="gx-btn gx-btn-ghost"
+                                data-bs-dismiss="modal">
+
+                            Cancel
+
+                        </button>
+
+                        <button type="submit"
+                                id="pfPwSubmit"
+                                class="gx-btn gx-btn-primary"
+                                data-loading="Updating...">
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                            Update Password
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

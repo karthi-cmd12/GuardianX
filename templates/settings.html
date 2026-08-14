@@ -1,0 +1,909 @@
+{% extends "base.html" %}
+
+{% block title %}GuardianX | Settings{% endblock %}
+
+{% block content %}
+
+<div class="gx-dashboard gx-settings">
+
+    <!-- Sidebar -->
+
+    {% include "components/sidebar.html" %}
+
+    <div class="gx-overlay"></div>
+
+    <!-- Main Content -->
+
+    <main class="gx-main">
+
+        <!-- ==========================
+             Top Bar
+        =========================== -->
+
+        <div class="gx-topbar">
+
+            <button class="gx-hamburger" aria-label="Toggle navigation">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <div class="gx-topbar-title">
+
+                <h1>Settings</h1>
+
+                <p>Configure your GuardianX experience.</p>
+
+            </div>
+
+            <div class="gx-top-actions">
+
+                <span class="gx-status-pill" role="status">
+
+                    <span class="gx-pulse-dot"></span>
+
+                    Preferences Saved Locally
+
+                </span>
+
+                <a href="{{ url_for('auth.logout') }}"
+                   class="gx-topbar-logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>Logout</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show gx-animate-in" role="alert">
+
+                    {{ message }}
+
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+                </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- ==========================
+             Save Status
+        =========================== -->
+
+        <div id="stSaveStatus"
+             class="st-save-status"
+             role="status"
+             aria-live="polite">
+
+            <i class="fa-solid fa-circle-check"></i>
+
+            <span id="stSaveStatusText">Settings saved.</span>
+
+        </div>
+
+
+        <!-- ==========================
+             Settings Layout
+        =========================== -->
+
+        <div class="st-layout">
+
+            <!-- Left: Category Navigation -->
+
+            <aside class="st-nav" aria-label="Settings categories">
+
+                <p class="st-nav-label">Categories</p>
+
+                <button type="button"
+                        class="st-nav-btn active"
+                        data-target="security">
+
+                    <i class="fa-solid fa-user-shield"></i>
+
+                    <span>Security</span>
+
+                </button>
+
+                <button type="button"
+                        class="st-nav-btn"
+                        data-target="scan">
+
+                    <i class="fa-solid fa-microscope"></i>
+
+                    <span>Scan</span>
+
+                </button>
+
+                <button type="button"
+                        class="st-nav-btn"
+                        data-target="interface">
+
+                    <i class="fa-solid fa-display"></i>
+
+                    <span>Interface</span>
+
+                </button>
+
+                <button type="button"
+                        class="st-nav-btn"
+                        data-target="privacy">
+
+                    <i class="fa-solid fa-shield-heart"></i>
+
+                    <span>Privacy</span>
+
+                </button>
+
+            </aside>
+
+
+            <!-- Right: Panels -->
+
+            <div class="st-panels">
+
+                <!-- ==========================
+                     SECURITY
+                =========================== -->
+
+                <section id="st-security" class="st-panel active" aria-label="Security settings">
+
+                    <div class="st-panel-head">
+
+                        <h2>Security Settings</h2>
+
+                        <p>Protect your account and control security notifications.</p>
+
+                    </div>
+
+                    <div class="gx-card st-card gx-animate-in">
+
+                        <div class="st-card-head">
+
+                            <h3>
+
+                                <i class="fa-solid fa-shield-halved"></i>
+
+                                Login Protection
+
+                            </h3>
+
+                            <p>Your current account protection status.</p>
+
+                        </div>
+
+                        <div class="st-protect-list">
+
+                            <div class="st-protect-item {{ 'is-done' if protection.email_verified }}">
+
+                                <span class="st-protect-icon">
+
+                                    <i class="fa-solid {{ 'fa-check' if protection.email_verified else 'fa-envelope' }}"></i>
+
+                                </span>
+
+                                <span class="st-protect-meta">
+
+                                    <strong>Email Verification</strong>
+
+                                    <small>
+                                        {% if protection.email_verified %}
+                                            Verified
+                                        {% else %}
+                                            Not verified
+                                        {% endif %}
+                                    </small>
+
+                                </span>
+
+                                {% if not protection.email_verified %}
+                                    <a href="{{ url_for('verification.verify_email') }}"
+                                       class="gx-btn gx-btn-ghost gx-btn-sm">Verify</a>
+                                {% endif %}
+
+                            </div>
+
+                            <div class="st-protect-item {{ 'is-done' if protection.mobile_verified }}">
+
+                                <span class="st-protect-icon">
+
+                                    <i class="fa-solid {{ 'fa-check' if protection.mobile_verified else 'fa-mobile-screen-button' }}"></i>
+
+                                </span>
+
+                                <span class="st-protect-meta">
+
+                                    <strong>Mobile Verification</strong>
+
+                                    <small>
+                                        {% if protection.mobile_verified %}
+                                            Verified
+                                        {% else %}
+                                            Not verified
+                                        {% endif %}
+                                    </small>
+
+                                </span>
+
+                                {% if not protection.mobile_verified and current_user.mobile %}
+                                    <a href="{{ url_for('verification.verify_mobile') }}"
+                                       class="gx-btn gx-btn-ghost gx-btn-sm">Verify</a>
+                                {% endif %}
+
+                            </div>
+
+                            <div class="st-protect-item {{ 'is-done' if protection.gmail_connected }}">
+
+                                <span class="st-protect-icon">
+
+                                    <i class="fa-brands fa-google"></i>
+
+                                </span>
+
+                                <span class="st-protect-meta">
+
+                                    <strong>Gmail Connection</strong>
+
+                                    <small>
+                                        {% if protection.gmail_connected %}
+                                            Connected
+                                        {% else %}
+                                            Not connected
+                                        {% endif %}
+                                    </small>
+
+                                </span>
+
+                                {% if not protection.gmail_connected %}
+                                    <a href="{{ url_for('google.login') }}"
+                                       class="gx-btn gx-btn-ghost gx-btn-sm">Connect</a>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="gx-card st-card gx-animate-in">
+
+                        <div class="st-card-head">
+
+                            <h3>
+
+                                <i class="fa-solid fa-bell"></i>
+
+                                Security Alerts
+
+                            </h3>
+
+                            <p>Notify me when GuardianX detects a potential threat.</p>
+
+                        </div>
+
+                        <div class="st-setting-row">
+
+                            <div class="st-setting-copy">
+
+                                <strong>Security alerts</strong>
+
+                                <small>
+                                    Get notified when a scan returns a suspicious
+                                    or high-risk result.
+                                </small>
+
+                            </div>
+
+                            <label class="st-switch">
+
+                                <input
+                                    type="checkbox"
+                                    data-setting="security_alerts"
+                                    {{ 'checked' if settings.security_alerts }}>
+
+                                <span class="st-slider" aria-hidden="true"></span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <div class="gx-card st-card gx-animate-in">
+
+                        <div class="st-card-head">
+
+                            <h3>
+
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+
+                                Scan History
+
+                            </h3>
+
+                            <p>Control whether GuardianX keeps scan history.</p>
+
+                        </div>
+
+                        <div class="st-setting-row">
+
+                            <div class="st-setting-copy">
+
+                                <strong>Keep scan history</strong>
+
+                                <small>
+                                    Save privacy-safe summaries of your scans.
+                                    Raw passwords and message content are never stored.
+                                </small>
+
+                            </div>
+
+                            <label class="st-switch">
+
+                                <input
+                                    type="checkbox"
+                                    data-setting="save_scan_history"
+                                    data-sync="stScanHistorySync"
+                                    {{ 'checked' if settings.save_scan_history }}>
+
+                                <span class="st-slider" aria-hidden="true"></span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================
+                     SCAN
+                =========================== -->
+
+                <section id="st-scan" class="st-panel" aria-label="Scan settings">
+
+                    <div class="st-panel-head">
+
+                        <h2>Scan Settings</h2>
+
+                        <p>Customize how scans run and results are displayed.</p>
+
+                    </div>
+
+                    <div class="gx-card st-card gx-animate-in">
+
+                        <div class="st-card-head">
+
+                            <h3>
+
+                                <i class="fa-solid fa-gauge-high"></i>
+
+                                Default Risk Display
+
+                            </h3>
+
+                            <p>How risk levels appear on scan results.</p>
+
+                        </div>
+
+                        <div class="st-setting-row">
+
+                            <div class="st-setting-copy">
+
+                                <strong>Risk display</strong>
+
+                                <small>
+                                    Show risk as a level badge or a numeric score.
+                                </small>
+
+                            </div>
+
+                            <div class="st-select">
+
+                                <select id="stRiskDisplay"
+                                        data-setting="default_risk_display">
+
+                                    <option value="level"
+                                            {{ 'selected' if settings.default_risk_display == 'level' }}>
+                                        Level badge
+                                    </option>
+
+                                    <option value="score"
+                                            {{ 'selected' if settings.default_risk_display == 'score' }}>
+                                        Numeric score
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="gx-card st-card gx-animate-in">
+
+                        <div class="st-card-head">
+
+                            <h3>
+
+                                <i class="fa-solid fa-floppy-disk"></i>
+
+                                Save Scan History
+
+                            </h3>
+
+                            <p>Automatically record privacy-safe scan results.</p>
+
+                        </div>
+
+                        <div class="st-setting-row">
+
+                            <div class="st-setting-copy">
+
+                                <strong>Automatically save scan history</strong>
+
+                                <small>
+                                    When enabled, every scan is saved to your
+                                    history automatically.
+                                </small>
+
+                            </div>
+
+                            <label class="st-switch">
+
+                                <input
+                                    type="checkbox"
+                                    id="stScanHistorySync"
+                                    data-setting="save_scan_history"
+                                    data-sync="stSecurityHistory"
+                                    {{ 'checked' if settings.save_scan_history }}>
+
+                                <span class="st-slider" aria-hidden="true"></span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <div class="gx-card st-card gx-animate-in">
+
+                        <div class="st-card-head">
+
+                            <h3>
+
+                                <i class="fa-solid fa-list-check"></i>
+
+                                Detailed Indicators
+
+                            </h3>
+
+                            <p>Control how much detail scan results show.</p>
+
+                        </div>
+
+                        <div class="st-setting-row">
+
+                            <div class="st-setting-copy">
+
+                                <strong>Show detailed security indicators</strong>
+
+                                <small>
+                                    Display verdicts and detailed indicators in
+                                    your scan history.
+                                </small>
+
+                            </div>
+
+                            <label class="st-switch">
+
+                                <input
+                                    type="checkbox"
+                                    data-setting="detailed_results"
+                                    {{ 'checked' if settings.detailed_results }}>
+
+                                <span class="st-slider" aria-hidden="true"></span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================
+                     INTERFACE
+                =========================== -->
+
+                <section id="st-interface" class="st-panel" aria-label="Interface settings">
+
+                    <div class="st-panel-head">
+
+                        <h2>Interface Settings</h2>
+
+                        <p>Customize how GuardianX looks and feels.</p>
+
+                    </div>
+
+                    <div class="gx-card st-card gx-animate-in">
+
+                        <div class="st-card-head">
+
+                            <h3>
+
+                                <i class="fa-solid fa-display"></i>
+
+                                Layout &amp; Motion
+
+                            </h3>
+
+                            <p>Applies instantly across GuardianX pages.</p>
+
+                        </div>
+
+                        <div class="st-setting-row">
+
+                            <div class="st-setting-copy">
+
+                                <strong>Compact layout</strong>
+
+                                <small>
+                                    Use tighter spacing so more content fits on screen.
+                                </small>
+
+                            </div>
+
+                            <label class="st-switch">
+
+                                <input
+                                    type="checkbox"
+                                    data-setting="compact_mode"
+                                    {{ 'checked' if settings.compact_mode }}>
+
+                                <span class="st-slider" aria-hidden="true"></span>
+
+                            </label>
+
+                        </div>
+
+                        <div class="st-setting-row">
+
+                            <div class="st-setting-copy">
+
+                                <strong>Animations</strong>
+
+                                <small>
+                                    Enable subtle transitions and micro-interactions.
+                                </small>
+
+                            </div>
+
+                            <label class="st-switch">
+
+                                <input
+                                    type="checkbox"
+                                    data-setting="animations_enabled"
+                                    {{ 'checked' if settings.animations_enabled }}>
+
+                                <span class="st-slider" aria-hidden="true"></span>
+
+                            </label>
+
+                        </div>
+
+                        <div class="st-setting-row">
+
+                            <div class="st-setting-copy">
+
+                                <strong>Reduced motion</strong>
+
+                                <small>
+                                    Minimize animations for a calmer experience.
+                                </small>
+
+                            </div>
+
+                            <label class="st-switch">
+
+                                <input
+                                    type="checkbox"
+                                    data-setting="reduced_motion"
+                                    {{ 'checked' if settings.reduced_motion }}>
+
+                                <span class="st-slider" aria-hidden="true"></span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================
+                     PRIVACY
+                =========================== -->
+
+                <section id="st-privacy" class="st-panel" aria-label="Privacy settings">
+
+                    <div class="st-panel-head">
+
+                        <h2>Privacy</h2>
+
+                        <p>Understand and control what GuardianX stores.</p>
+
+                    </div>
+
+                    <div class="gx-card st-card st-card-danger gx-animate-in">
+
+                        <div class="st-card-head">
+
+                            <h3>
+
+                                <i class="fa-solid fa-trash-can"></i>
+
+                                Clear Scan History
+
+                            </h3>
+
+                            <p>Remove all scan history for your account.</p>
+
+                        </div>
+
+                        <div class="st-setting-row">
+
+                            <div class="st-setting-copy">
+
+                                <strong>
+                                    {{ history_count }} saved scan
+                                    record{{ '' if history_count == 1 else 's' }}
+                                </strong>
+
+                                <small>
+                                    Deleting is permanent and cannot be undone.
+                                    Future scans will still be recorded unless you
+                                    turn off automatic history.
+                                </small>
+
+                            </div>
+
+                            <button type="button"
+                                    id="stClearHistoryBtn"
+                                    class="gx-btn st-btn-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#stClearModal">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                                Clear History
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="gx-card st-card gx-animate-in">
+
+                        <div class="st-card-head">
+
+                            <h3>
+
+                                <i class="fa-solid fa-database"></i>
+
+                                Your Account Data
+
+                            </h3>
+
+                            <p>What GuardianX stores about you.</p>
+
+                        </div>
+
+                        <div class="st-data-grid">
+
+                            <div class="st-data-item">
+
+                                <i class="fa-solid fa-id-card"></i>
+
+                                <span>
+                                    <strong>Profile</strong>
+                                    <small>Name, username, email and mobile.</small>
+                                </span>
+
+                            </div>
+
+                            <div class="st-data-item">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                                <span>
+                                    <strong>Credentials</strong>
+                                    <small>Your password is stored only as a secure hash.</small>
+                                </span>
+
+                            </div>
+
+                            <div class="st-data-item">
+
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+
+                                <span>
+                                    <strong>Scan history</strong>
+                                    <small>Privacy-safe summaries, never raw content.</small>
+                                </span>
+
+                            </div>
+
+                            <div class="st-data-item">
+
+                                <i class="fa-solid fa-gears"></i>
+
+                                <span>
+                                    <strong>Preferences</strong>
+                                    <small>Your settings are stored in your account.</small>
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="gx-card st-card gx-animate-in">
+
+                        <div class="st-card-head">
+
+                            <h3>
+
+                                <i class="fa-solid fa-shield-halved"></i>
+
+                                What GuardianX Never Stores
+
+                            </h3>
+
+                        </div>
+
+                        <ul class="st-notes">
+
+                            <li>
+
+                                <i class="fa-solid fa-circle-check"></i>
+
+                                Plaintext passwords &mdash; only hashes are stored.
+
+                            </li>
+
+                            <li>
+
+                                <i class="fa-solid fa-circle-check"></i>
+
+                                Full SMS messages or email bodies.
+
+                            </li>
+
+                            <li>
+
+                                <i class="fa-solid fa-circle-check"></i>
+
+                                Raw QR payloads or OTP codes.
+
+                            </li>
+
+                            <li>
+
+                                <i class="fa-solid fa-circle-check"></i>
+
+                                Your data is never shared with third parties.
+
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- ==========================
+     Clear History Confirmation Modal
+========================== -->
+
+<div class="modal fade"
+     id="stClearModal"
+     tabindex="-1"
+     aria-labelledby="stClearTitle"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content st-modal-content st-modal-danger">
+
+            <div class="st-modal-head">
+
+                <h3 id="stClearTitle">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Clear Scan History
+
+                </h3>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+
+            </div>
+
+            <div class="st-modal-body">
+
+                <div class="st-clear-icon">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                </div>
+
+                <p>
+                    Are you sure you want to delete your entire scan history?
+                    This action cannot be undone.
+                </p>
+
+            </div>
+
+            <div class="st-modal-actions">
+
+                <button type="button"
+                        class="gx-btn gx-btn-ghost"
+                        data-bs-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+                <button type="button"
+                        id="stConfirmClearBtn"
+                        class="gx-btn st-btn-danger"
+                        data-loading="Deleting...">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Delete All History
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

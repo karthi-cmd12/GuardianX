@@ -1,0 +1,1122 @@
+{% extends "base.html" %}
+
+{% block title %}GuardianX | Security Command Center{% endblock %}
+
+{% block content %}
+
+{% set total = stats.total_scans %}
+
+<div class="gx-dashboard cmd-dashboard">
+
+    <!-- Sidebar -->
+
+    {% include "components/sidebar.html" %}
+
+    <div class="gx-overlay"></div>
+
+
+    <!-- Main Content -->
+
+    <main class="gx-main">
+
+        <!-- ==========================
+             Top Bar
+        =========================== -->
+
+        <div class="gx-topbar">
+
+            <button class="gx-hamburger" aria-label="Toggle navigation">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <div class="gx-topbar-title">
+
+                <h1>Security Command Center</h1>
+
+                <p>Your real-time protection status.</p>
+
+            </div>
+
+            <div class="gx-top-actions">
+
+                <span class="gx-status-pill" role="status">
+
+                    <span class="gx-pulse-dot"></span>
+
+                    Protection Active
+
+                </span>
+
+                <a href="{{ url_for('profile.profile_home') }}"
+                   class="gx-avatar-chip"
+                   title="View profile">
+
+                    <span class="gx-avatar">
+                        {{ current_user.full_name[:1]|upper }}
+                    </span>
+
+                    <span class="gx-avatar-name">{{ first_name }}</span>
+
+                </a>
+
+                <a href="{{ url_for('auth.logout') }}"
+                   class="gx-topbar-logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>Logout</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show gx-animate-in" role="alert">
+
+                    {{ message }}
+
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+                </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- ==========================
+             Premium Hero Header
+        =========================== -->
+
+        <section class="cmd-hero gx-animate-in" aria-labelledby="cmd-hero-title">
+
+            <div class="cmd-hero-bg" aria-hidden="true">
+
+                <span class="cmd-hero-orb cmd-hero-orb-1"></span>
+
+                <span class="cmd-hero-orb cmd-hero-orb-2"></span>
+
+                <span class="cmd-hero-grid"></span>
+
+            </div>
+
+            <div class="cmd-hero-copy">
+
+                <span class="cmd-hero-badge">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    GuardianX Protection Status
+
+                </span>
+
+                <h2 id="cmd-hero-title">
+
+                    <span class="cmd-greeting" id="greeting">Good evening</span>, {{ first_name }}
+                    <span class="cmd-wave" aria-hidden="true">👋</span>
+
+                </h2>
+
+                <p>
+                    Your security command center. GuardianX continuously monitors
+                    links, emails, messages, passwords and QR codes for phishing
+                    and scam activity.
+                </p>
+
+                <div class="cmd-hero-meta">
+
+                    <span class="cmd-chip cmd-chip-live">
+
+                        <span class="gx-pulse-dot"></span>
+
+                        Protection Active
+
+                    </span>
+
+                    <span class="cmd-chip">
+
+                        <i class="fa-solid fa-microchip"></i>
+
+                        Engine: {{ engine_status }}
+
+                    </span>
+
+                </div>
+
+                <div class="cmd-hero-actions">
+
+                    <a href="{{ url_for('url_detector.url_detector_home') }}"
+                       class="gx-btn gx-btn-primary">
+
+                        <i class="fa-solid fa-link"></i>
+
+                        Scan a URL
+
+                    </a>
+
+                    <a href="{{ url_for('email_detector.email_detector_home') }}"
+                       class="gx-btn gx-btn-outline">
+
+                        <i class="fa-solid fa-envelope-circle-check"></i>
+
+                        Check Email
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Security Score -->
+
+            <aside class="cmd-score cmd-tone-{{ score.status.tone }}"
+                   aria-label="Security score">
+
+                <div class="cmd-score-ring"
+                     data-score="{{ score.score }}">
+
+                    <svg viewBox="0 0 120 120" aria-hidden="true">
+
+                        <defs>
+
+                            <linearGradient id="cmd-ring-gradient"
+                                            x1="0%" y1="0%"
+                                            x2="100%" y2="100%">
+
+                                <stop offset="0%" stop-color="#00C6FF"></stop>
+
+                                <stop offset="100%" stop-color="#7B2FF7"></stop>
+
+                            </linearGradient>
+
+                        </defs>
+
+                        <circle class="cmd-ring-bg" cx="60" cy="60" r="52"></circle>
+
+                        <circle class="cmd-ring-fg" cx="60" cy="60" r="52"
+                                stroke-dasharray="326.7"
+                                stroke-dashoffset="{{ 326.7 - (326.7 * score.score / 100) }}"></circle>
+
+                    </svg>
+
+                    <div class="cmd-score-value">
+
+                        <strong id="cmdScoreValue">{{ score.score }}</strong>
+
+                        <span>/ 100</span>
+
+                    </div>
+
+                </div>
+
+                <p class="cmd-score-label">Security Score</p>
+
+                <span class="cmd-score-status" role="status">
+
+                    <span aria-hidden="true">{{ score.status.emoji }}</span>
+
+                    <span class="visually-hidden">
+                        {{ score.status.accessible }}. Score {{ score.score }} out of 100.
+                    </span>
+
+                    {{ score.status.label }}
+
+                </span>
+
+                <ul class="cmd-score-factors">
+
+                    {% for comp in score.components %}
+
+                    <li>
+
+                        <span class="cmd-factor-label">{{ comp.label }}</span>
+
+                        <span class="cmd-factor-bar" aria-hidden="true">
+
+                            <span class="cmd-factor-fill"
+                                  style="width: {{ (comp.points * 100 / comp.max) | round | int }}%"></span>
+
+                        </span>
+
+                        <span class="cmd-factor-pts">
+                            {{ comp.points }}/{{ comp.max }}
+                        </span>
+
+                    </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </aside>
+
+        </section>
+
+
+        <!-- ==========================
+             Security Overview Cards
+        =========================== -->
+
+        <section class="cmd-cards" aria-label="Security overview">
+
+            <div class="cmd-card cmd-ac-cyan gx-animate-in">
+
+                <span class="cmd-card-icon">
+
+                    <i class="fa-solid fa-activity"></i>
+
+                </span>
+
+                <div class="cmd-card-info">
+
+                    <span class="cmd-card-label">Total Scans</span>
+
+                    <strong class="cmd-card-value"
+                            data-count="{{ stats.total_scans }}">{{ stats.total_scans }}</strong>
+
+                    <span class="cmd-card-trend">
+                        {% if stats.scans_this_month > 0 %}
+                            {{ stats.scans_this_month }} this month
+                        {% else %}
+                            No scans yet
+                        {% endif %}
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="cmd-card cmd-ac-green gx-animate-in">
+
+                <span class="cmd-card-icon">
+
+                    <i class="fa-solid fa-shield-check"></i>
+
+                </span>
+
+                <div class="cmd-card-info">
+
+                    <span class="cmd-card-label">Safe</span>
+
+                    <strong class="cmd-card-value"
+                            data-count="{{ stats.safe_scans }}">{{ stats.safe_scans }}</strong>
+
+                    <span class="cmd-card-trend">
+                        {% if total > 0 %}
+                            {{ stats.pct_safe }}% of all scans
+                        {% else %}
+                            No scans yet
+                        {% endif %}
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="cmd-card cmd-ac-amber gx-animate-in">
+
+                <span class="cmd-card-icon">
+
+                    <i class="fa-solid fa-circle-exclamation"></i>
+
+                </span>
+
+                <div class="cmd-card-info">
+
+                    <span class="cmd-card-label">Suspicious</span>
+
+                    <strong class="cmd-card-value"
+                            data-count="{{ stats.suspicious_scans }}">{{ stats.suspicious_scans }}</strong>
+
+                    <span class="cmd-card-trend">
+                        {% if total > 0 %}
+                            {{ stats.pct_suspicious }}% of all scans
+                        {% else %}
+                            No scans yet
+                        {% endif %}
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="cmd-card cmd-ac-red gx-animate-in">
+
+                <span class="cmd-card-icon">
+
+                    <i class="fa-solid fa-shield-virus"></i>
+
+                </span>
+
+                <div class="cmd-card-info">
+
+                    <span class="cmd-card-label">High Risk</span>
+
+                    <strong class="cmd-card-value"
+                            data-count="{{ stats.high_risk_scans }}">{{ stats.high_risk_scans }}</strong>
+
+                    <span class="cmd-card-trend">
+                        {% if total > 0 %}
+                            {{ stats.pct_high }}% of all scans
+                        {% else %}
+                            No scans yet
+                        {% endif %}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Priority Alert
+        =========================== -->
+
+        {% if priority_alert.active %}
+
+        <section class="cmd-alert cmd-alert-danger gx-animate-in" role="alert">
+
+            <span class="cmd-alert-icon">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+            </span>
+
+            <div class="cmd-alert-body">
+
+                <strong>Security Alert</strong>
+
+                <p>
+                    A high-risk {{ priority_alert.record.label }} was detected recently.
+                    {{ priority_alert.record.verdict }}
+                </p>
+
+                <time>{{ priority_alert.record.time_ago }}</time>
+
+            </div>
+
+            <a href="{{ url_for('history.scan_history_home') }}"
+               class="gx-btn cmd-btn-danger">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+                Review Threat
+
+            </a>
+
+        </section>
+
+        {% else %}
+
+        <section class="cmd-alert cmd-alert-success gx-animate-in" role="status">
+
+            <span class="cmd-alert-icon">
+
+                <i class="fa-solid fa-shield-check"></i>
+
+            </span>
+
+            <div class="cmd-alert-body">
+
+                <strong>No Critical Threats</strong>
+
+                <p>
+                    GuardianX has not detected any critical threats recently.
+                </p>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- ==========================
+             Threat Level + Security Activity
+        =========================== -->
+
+        <section class="cmd-grid cmd-grid-2">
+
+            <div class="cmd-panel cmd-threat gx-animate-in">
+
+                <div class="cmd-panel-head">
+
+                    <h3>
+
+                        <i class="fa-solid fa-gauge-high"></i>
+
+                        Current Threat Level
+
+                    </h3>
+
+                    <p>Based on scans from the last 7 days.</p>
+
+                </div>
+
+                <div class="cmd-threat-body cmd-tone-{{ threat.tone }}">
+
+                    <span class="cmd-threat-dot" aria-hidden="true"></span>
+
+                    <strong class="cmd-threat-level">
+                        {{ threat.emoji }}
+                        <span class="visually-hidden">Threat level </span>{{ threat.level }}
+                    </strong>
+
+                    <p>{{ threat.message }}</p>
+
+                </div>
+
+            </div>
+
+
+            <div class="cmd-panel cmd-chart-panel gx-animate-in">
+
+                <div class="cmd-panel-head">
+
+                    <h3>
+
+                        <i class="fa-solid fa-chart-column"></i>
+
+                        Security Activity
+
+                    </h3>
+
+                    <p>Last 7 days</p>
+
+                </div>
+
+                {% if weekly.total > 0 %}
+
+                <div class="cmd-chart">
+
+                    <div class="cmd-chart-bars"
+                         role="img"
+                         aria-label="Security activity for the last 7 days. {% for day in weekly.days %} {{ day.label }}: {{ day.safe }} safe, {{ day.suspicious }} suspicious, {{ day.high }} high risk.{% endfor %}">
+
+                        {% for day in weekly.days %}
+
+                        <div class="cmd-chart-col">
+
+                            <div class="cmd-chart-track">
+
+                                {% if day.safe %}
+                                <span class="cmd-seg cmd-seg-safe"
+                                      style="height: {{ day.safe_pct }}%"
+                                      title="{{ day.safe }} safe scan(s)"></span>
+                                {% endif %}
+
+                                {% if day.suspicious %}
+                                <span class="cmd-seg cmd-seg-susp"
+                                      style="height: {{ day.suspicious_pct }}%"
+                                      title="{{ day.suspicious }} suspicious scan(s)"></span>
+                                {% endif %}
+
+                                {% if day.high %}
+                                <span class="cmd-seg cmd-seg-high"
+                                      style="height: {{ day.high_pct }}%"
+                                      title="{{ day.high }} high-risk scan(s)"></span>
+                                {% endif %}
+
+                            </div>
+
+                            <span class="cmd-chart-day">{{ day.label }}</span>
+
+                            <span class="cmd-chart-date">{{ day.day }}</span>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="cmd-legend">
+
+                        <span>
+
+                            <i class="cmd-legend-dot cmd-seg-safe" aria-hidden="true"></i>
+
+                            Safe
+
+                        </span>
+
+                        <span>
+
+                            <i class="cmd-legend-dot cmd-seg-susp" aria-hidden="true"></i>
+
+                            Suspicious
+
+                        </span>
+
+                        <span>
+
+                            <i class="cmd-legend-dot cmd-seg-high" aria-hidden="true"></i>
+
+                            High Risk
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                <div class="cmd-empty">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                    <h4>No scan activity yet</h4>
+
+                    <p>
+                        Your security activity will appear here after your first scan.
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Scan Type Breakdown + Recent Activity
+        =========================== -->
+
+        <section class="cmd-grid cmd-grid-2">
+
+            <div class="cmd-panel cmd-breakdown gx-animate-in">
+
+                <div class="cmd-panel-head">
+
+                    <h3>
+
+                        <i class="fa-solid fa-chart-pie"></i>
+
+                        Scan Type Breakdown
+
+                    </h3>
+
+                    <p>Distribution across all scan types.</p>
+
+                </div>
+
+                {% if total > 0 %}
+
+                <ul class="cmd-breakdown">
+
+                    {% for item in breakdown %}
+
+                    <li>
+
+                        <span class="cmd-bd-icon">
+
+                            <i class="fa-solid fa-{{ item.icon }}"></i>
+
+                        </span>
+
+                        <span class="cmd-bd-meta">
+
+                            <strong>{{ item.label }}</strong>
+
+                            <span class="cmd-bd-track" aria-hidden="true">
+
+                                <span class="cmd-bd-fill"
+                                      style="width: {{ item.pct }}%"></span>
+
+                            </span>
+
+                        </span>
+
+                        <span class="cmd-bd-nums">
+
+                            <strong>{{ item.count }}</strong>
+
+                            <small>{{ item.pct }}%</small>
+
+                        </span>
+
+                    </li>
+
+                    {% endfor %}
+
+                </ul>
+
+                {% else %}
+
+                <div class="cmd-empty">
+
+                    <i class="fa-solid fa-inbox"></i>
+
+                    <h4>No scan data yet</h4>
+
+                    <p>
+                        Scan URLs, emails, messages, passwords or QR codes
+                        to build your scan-type breakdown.
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="cmd-panel cmd-activity gx-animate-in">
+
+                <div class="cmd-panel-head cmd-panel-head-row">
+
+                    <div>
+
+                        <h3>
+
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+
+                            Recent Security Activity
+
+                        </h3>
+
+                        <p>Your latest scan decisions.</p>
+
+                    </div>
+
+                    <a href="{{ url_for('history.scan_history_home') }}"
+                       class="cmd-link">
+
+                        View All History
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+                {% if recent_activity %}
+
+                <ol class="cmd-timeline">
+
+                    {% for item in recent_activity %}
+
+                    <li class="cmd-tl-item cmd-tone-{{ item.tone }}">
+
+                        <span class="cmd-tl-icon">
+
+                            <i class="fa-solid fa-{{ item.icon }}"></i>
+
+                        </span>
+
+                        <span class="cmd-tl-body">
+
+                            <strong>
+                                {% if item.risk_level == 'HIGH' %}🔴{% elif item.risk_level == 'MEDIUM' %}🟡{% else %}🟢{% endif %}
+                                <span class="visually-hidden">Risk level {{ item.risk_level }}.</span>
+                                {{ item.label }} - {{ item.risk_level }}
+                            </strong>
+
+                            <span>{{ item.verdict }}</span>
+
+                        </span>
+
+                        <time class="cmd-tl-time">{{ item.time_ago }}</time>
+
+                    </li>
+
+                    {% endfor %}
+
+                </ol>
+
+                {% else %}
+
+                <div class="cmd-empty">
+
+                    <i class="fa-solid fa-inbox"></i>
+
+                    <h4>No security activity yet</h4>
+
+                    <p>
+                        Run your first scan to start monitoring threats.
+                        Recent decisions will appear here.
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Notifications + AI Assistant + Recommendations
+        =========================== -->
+
+        <section class="cmd-grid cmd-grid-3">
+
+            <!-- Notification Center -->
+
+            <div class="cmd-panel cmd-notif-panel gx-animate-in">
+
+                <div class="cmd-panel-head cmd-panel-head-row">
+
+                    <div>
+
+                        <h3>
+
+                            <i class="fa-regular fa-bell"></i>
+
+                            Notifications
+
+                        </h3>
+
+                        <p>Latest security alerts.</p>
+
+                    </div>
+
+                    {% if unread_count > 0 %}
+
+                    <span class="cmd-count-badge">{{ unread_count }} unread</span>
+
+                    {% endif %}
+
+                </div>
+
+                {% if recent_notifications %}
+
+                <ul class="cmd-notif-list">
+
+                    {% for n in recent_notifications %}
+
+                    <li>
+
+                        <a href="{{ n['destination'] }}"
+                           class="cmd-notif-item {{ 'is-unread' if not n['is_read'] }} cmd-sev-{{ n['severity'] | lower }}"
+                           data-notif-id="{{ n['id'] }}"
+                           title="Open: {{ n['title'] }}">
+
+                            <span class="cmd-notif-icon">
+
+                                <i class="fa-solid fa-{{ n['icon'] }}"></i>
+
+                            </span>
+
+                            <span class="cmd-notif-body">
+
+                                <strong>{{ n['title'] }}</strong>
+
+                                <span class="cmd-notif-msg">{{ n['message'] }}</span>
+
+                                <time>{{ n['time_ago'] }}</time>
+
+                            </span>
+
+                            {% if not n['is_read'] %}
+
+                            <span class="cmd-notif-dot" aria-hidden="true"></span>
+
+                            {% endif %}
+
+                        </a>
+
+                    </li>
+
+                    {% endfor %}
+
+                </ul>
+
+                <a href="{{ url_for('notifications.notifications_page') }}"
+                   class="cmd-panel-foot">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                    View All Notifications
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+                {% else %}
+
+                <div class="cmd-empty">
+
+                    <i class="fa-regular fa-bell-slash"></i>
+
+                    <h4>No notifications yet</h4>
+
+                    <p>
+                        Security alerts will appear here when a scan
+                        finds something suspicious.
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- AI Assistant -->
+
+            <div class="cmd-panel cmd-ai gx-animate-in">
+
+                <div class="cmd-ai-head">
+
+                    <span class="cmd-ai-icon">
+
+                        <i class="fa-solid fa-robot"></i>
+
+                    </span>
+
+                    <h3>GuardianX AI Assistant</h3>
+
+                    <p>Need help understanding a security warning?</p>
+
+                </div>
+
+                <p class="cmd-ai-text">
+                    Ask the assistant about suspicious messages, links or
+                    warnings. Running on the {{ engine_status }}.
+                </p>
+
+                <div class="cmd-ai-actions">
+
+                    <a href="{{ url_for('ai_assistant.assistant_page') }}"
+                       class="gx-btn gx-btn-primary cmd-btn-block">
+
+                        <i class="fa-solid fa-comments"></i>
+
+                        Ask GuardianX AI
+
+                    </a>
+
+                    <a href="{{ url_for('ai_assistant.assistant_page') }}"
+                       class="gx-btn gx-btn-outline cmd-btn-block">
+
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+
+                        Analyze a Threat
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Security Recommendations -->
+
+            <div class="cmd-panel cmd-recs gx-animate-in">
+
+                <div class="cmd-panel-head">
+
+                    <h3>
+
+                        <i class="fa-solid fa-list-check"></i>
+
+                        Security Recommendations
+
+                    </h3>
+
+                    <p>Personalized from your real activity.</p>
+
+                </div>
+
+                <ul class="cmd-recs-list">
+
+                    {% for rec in recommendations %}
+
+                    <li class="cmd-rec cmd-tone-{{ rec.tone }}">
+
+                        <span class="cmd-rec-icon">
+
+                            <i class="fa-solid fa-{{ rec.icon }}"></i>
+
+                        </span>
+
+                        <div class="cmd-rec-body">
+
+                            <strong>{{ rec.title }}</strong>
+
+                            <p>{{ rec.text }}</p>
+
+                        </div>
+
+                        <a href="{{ url_for(rec.url) }}"
+                           class="gx-btn gx-btn-ghost gx-btn-sm">
+
+                            {{ rec.button }}
+
+                        </a>
+
+                    </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Quick Security Actions
+        =========================== -->
+
+        <section class="cmd-panel cmd-quick gx-animate-in">
+
+            <div class="cmd-panel-head">
+
+                <h3>
+
+                    <i class="fa-solid fa-bolt"></i>
+
+                    Quick Security Actions
+
+                </h3>
+
+                <p>Launch a security scan in one click.</p>
+
+            </div>
+
+            <div class="cmd-quick-grid">
+
+                <a href="{{ url_for('url_detector.url_detector_home') }}"
+                   class="cmd-quick-item">
+
+                    <span class="cmd-quick-icon cmd-ac-cyan">
+
+                        <i class="fa-solid fa-link"></i>
+
+                    </span>
+
+                    <span class="cmd-quick-meta">
+
+                        <strong>Scan URL</strong>
+
+                        <small>Check links for phishing</small>
+
+                    </span>
+
+                </a>
+
+                <a href="{{ url_for('email_detector.email_detector_home') }}"
+                   class="cmd-quick-item">
+
+                    <span class="cmd-quick-icon cmd-ac-blue">
+
+                        <i class="fa-solid fa-envelope-circle-check"></i>
+
+                    </span>
+
+                    <span class="cmd-quick-meta">
+
+                        <strong>Check Email</strong>
+
+                        <small>Analyze inbox threats</small>
+
+                    </span>
+
+                </a>
+
+                <a href="{{ url_for('sms_detector.sms_detector_home') }}"
+                   class="cmd-quick-item">
+
+                    <span class="cmd-quick-icon cmd-ac-purple">
+
+                        <i class="fa-solid fa-comment-sms"></i>
+
+                    </span>
+
+                    <span class="cmd-quick-meta">
+
+                        <strong>Analyze SMS</strong>
+
+                        <small>Detect scam messages</small>
+
+                    </span>
+
+                </a>
+
+                <a href="{{ url_for('password_analyzer.password_analyzer_home') }}"
+                   class="cmd-quick-item">
+
+                    <span class="cmd-quick-icon cmd-ac-amber">
+
+                        <i class="fa-solid fa-key"></i>
+
+                    </span>
+
+                    <span class="cmd-quick-meta">
+
+                        <strong>Check Password</strong>
+
+                        <small>Test password strength</small>
+
+                    </span>
+
+                </a>
+
+                <a href="{{ url_for('qr_scanner.qr_scanner_home') }}"
+                   class="cmd-quick-item">
+
+                    <span class="cmd-quick-icon cmd-ac-green">
+
+                        <i class="fa-solid fa-qrcode"></i>
+
+                    </span>
+
+                    <span class="cmd-quick-meta">
+
+                        <strong>Scan QR</strong>
+
+                        <small>Inspect QR payloads</small>
+
+                    </span>
+
+                </a>
+
+                <a href="{{ url_for('ai_assistant.assistant_page') }}"
+                   class="cmd-quick-item">
+
+                    <span class="cmd-quick-icon cmd-ac-red">
+
+                        <i class="fa-solid fa-robot"></i>
+
+                    </span>
+
+                    <span class="cmd-quick-meta">
+
+                        <strong>Ask AI Assistant</strong>
+
+                        <small>Analyze any message</small>
+
+                    </span>
+
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+{% endblock %}

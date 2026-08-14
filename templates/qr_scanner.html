@@ -1,0 +1,472 @@
+{% extends "base.html" %}
+
+{% block title %}
+GuardianX | QR Security Scanner
+{% endblock %}
+
+{% block content %}
+
+<div class="gx-dashboard">
+
+    <!-- Sidebar -->
+
+    {% include "components/sidebar.html" %}
+
+    <div class="gx-overlay"></div>
+
+    <!-- Main Content -->
+
+    <main class="gx-main">
+
+        <!-- ==========================
+             Top Bar
+        =========================== -->
+
+        <div class="gx-topbar">
+
+            <button class="gx-hamburger" aria-label="Toggle navigation">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <div class="gx-topbar-title">
+
+                <h1>QR Security Scanner</h1>
+
+                <p>Scan a QR code before opening it.</p>
+
+            </div>
+
+            <div class="gx-top-actions">
+
+                <span class="gx-badge gx-badge-success">
+
+                    <span class="qr-pulse me-1"></span>
+
+                    AI Protection Active
+
+                </span>
+
+                <a href="{{ url_for('auth.logout') }}"
+                   class="gx-topbar-logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>Logout</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="container-fluid px-0">
+
+            <div class="row justify-content-center">
+
+                <div class="col-xl-8 col-lg-9">
+
+                    <!-- ==========================
+                         Page Header
+                    =========================== -->
+
+                    <header class="qr-header text-center mb-4 gx-animate-in">
+
+                        <div class="qr-header-icon mx-auto mb-3">
+
+                            <i class="fa-solid fa-qrcode"></i>
+
+                        </div>
+
+                        <h1 class="fw-bold">
+                            QR Security Scanner
+                        </h1>
+
+                        <p class="mx-auto">
+                            Scan a QR code before opening it. GuardianX
+                            checks the decoded content for suspicious
+                            links and security threats.
+                        </p>
+
+                    </header>
+
+
+                    <!-- ==========================
+                         Scanner Card
+                    =========================== -->
+
+                    <section class="qr-card card border-0 shadow-lg rounded-4 p-4 p-md-5 mb-4 gx-animate-in"
+                             aria-label="QR scanner">
+
+                        <div class="text-center mb-4">
+
+                            <div class="qr-icon mx-auto">
+
+                                <i class="fa-solid fa-qrcode"></i>
+
+                            </div>
+
+                            <h2 class="h4 fw-semibold mt-3 mb-1">
+                                QR Scanner
+                            </h2>
+
+                            <p class="text-secondary mb-0">
+                                Point your camera at a QR code or upload
+                                a QR image. Decoding happens on your
+                                device.
+                            </p>
+
+                        </div>
+
+
+                        <!-- ==========================
+                             Camera Area
+                        =========================== -->
+
+                        <div id="cameraArea"
+                             class="qr-camera-area d-none">
+
+                            <div class="qr-camera-frame" role="region"
+                                 aria-label="Live QR scanning view">
+
+                                <video id="cameraVideo"
+                                       class="qr-camera-video"
+                                       playsinline muted></video>
+
+                                <span class="qr-corner qr-corner-tl" aria-hidden="true"></span>
+
+                                <span class="qr-corner qr-corner-tr" aria-hidden="true"></span>
+
+                                <span class="qr-corner qr-corner-bl" aria-hidden="true"></span>
+
+                                <span class="qr-corner qr-corner-br" aria-hidden="true"></span>
+
+                                <div class="qr-scan-line" aria-hidden="true"></div>
+
+                                <div class="qr-camera-status">
+
+                                    <i class="fa-solid fa-camera"></i>
+
+                                    <span id="cameraStatusText">
+                                        Scanning for QR code...
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ==========================
+                             Upload Preview
+                        =========================== -->
+
+                        <div id="uploadPreviewWrap"
+                             class="qr-upload-preview d-none">
+
+                            <img id="uploadPreview"
+                                 class="qr-upload-preview-img"
+                                 alt="Uploaded QR code preview">
+
+                        </div>
+
+
+                        <!-- ==========================
+                             Actions
+                        =========================== -->
+
+                        <div class="qr-actions d-flex flex-column flex-sm-row gap-3">
+
+                            <button type="button" id="scanCameraBtn"
+                                    class="qr-btn btn btn-primary btn-lg flex-fill">
+
+                                <i class="fa-solid fa-camera"></i>
+                                Scan with Camera
+
+                            </button>
+
+                            <button type="button" id="stopCameraBtn"
+                                    class="qr-btn-stop btn btn-outline-secondary btn-lg flex-fill d-none">
+
+                                <i class="fa-solid fa-circle-stop"></i>
+                                Stop Camera
+
+                            </button>
+
+                            <div class="qr-or-divider" aria-hidden="true">
+                                <span>or</span>
+                            </div>
+
+                            <label for="qrFileInput"
+                                   id="uploadBtn"
+                                   class="qr-btn-upload btn btn-lg flex-fill mb-0"
+                                   role="button"
+                                   tabindex="0">
+
+                                <i class="fa-solid fa-image"></i>
+                                Upload QR Image
+
+                            </label>
+
+                            <input type="file"
+                                   id="qrFileInput"
+                                   class="d-none"
+                                   accept="image/png,image/jpeg,image/webp">
+
+                        </div>
+
+                        <p class="qr-upload-hint text-center mb-0 mt-3">
+                            Supports PNG, JPG, JPEG and WEBP images.
+                            Images are decoded in your browser and are
+                            never uploaded.
+                        </p>
+
+
+                        <!-- ==========================
+                             Decoded Content
+                        =========================== -->
+
+                        <div id="decodedBox"
+                             class="qr-decoded-box d-none">
+
+                            <div class="d-flex align-items-center gap-2 mb-2">
+
+                                <h4 class="h6 fw-semibold mb-0">
+                                    QR Content Detected
+                                </h4>
+
+                                <span id="decodedType"
+                                      class="qr-type-badge badge rounded-pill ms-auto">
+                                    UNKNOWN
+                                </span>
+
+                            </div>
+
+                            <div id="decodedContent"
+                                 class="qr-decoded-content"></div>
+
+                            <p class="qr-open-warning mb-0">
+                                <i class="fa-solid fa-triangle-exclamation me-1"></i>
+                                GuardianX never opens decoded URLs automatically.
+                            </p>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ==========================
+                         Loading State
+                    =========================== -->
+
+                    <div id="loadingState"
+                         class="qr-loading text-center py-4 d-none"
+                         aria-live="polite">
+
+                        <i class="fa-solid fa-spinner fa-spin fa-3x text-primary"></i>
+
+                        <p class="text-light mt-3 mb-0">
+                            Analyzing QR content security...
+                        </p>
+
+                    </div>
+
+
+                    <!-- ==========================
+                         Result Section
+                    =========================== -->
+
+                    <section id="resultCard"
+                             class="qr-result-card card border-0 shadow-lg rounded-4 p-4 p-md-5 mb-4 d-none"
+                             aria-label="QR content security analysis result">
+
+                        <h2 class="h4 fw-semibold mb-4">
+
+                            <i class="fa-solid fa-chart-line"></i>
+
+                            QR Security Analysis
+
+                        </h2>
+
+                        <!-- API Error -->
+
+                        <div id="resultError"
+                             class="alert alert-danger d-none"
+                             role="alert">
+
+                            <i class="fa-solid fa-triangle-exclamation me-2"></i>
+
+                            <span id="resultErrorMessage"></span>
+
+                        </div>
+
+                        <!-- Risk Score -->
+
+                        <div class="qr-result-score text-center mb-4">
+
+                            <h3 class="text-secondary small text-uppercase mb-2">
+                                Risk Score
+                            </h3>
+
+                            <div id="resultScore"
+                                 class="display-4 fw-bold text-white">
+                                &mdash;
+                            </div>
+
+                            <span id="resultBadge"
+                                  class="qr-result-badge badge rounded-pill px-4 py-2 mt-2">
+                                N/A
+                            </span>
+
+                            <div class="qr-score-meter mt-4"
+                                 role="progressbar"
+                                 aria-label="Risk score"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+
+                                <div class="qr-score-bar"
+                                     id="resultProgress"></div>
+
+                            </div>
+
+                            <p class="qr-score-scale text-uppercase mt-2 mb-0">
+                                <span>Safe</span>
+                                <span>Risky</span>
+                            </p>
+
+                        </div>
+
+                        <!-- URL Details (URL content only) -->
+
+                        <div id="urlDetailsBox" class="qr-result-box mb-3 d-none">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                URL Details
+                            </h4>
+
+                            <div class="qr-details-grid">
+
+                                <div>
+                                    <span>Protocol</span>
+                                    <strong id="resultScheme">&mdash;</strong>
+                                </div>
+
+                                <div>
+                                    <span>Hostname</span>
+                                    <strong id="resultHostname">&mdash;</strong>
+                                </div>
+
+                                <div>
+                                    <span>Normalized URL</span>
+                                    <strong id="resultUrl">&mdash;</strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Analysis Summary (URL content only) -->
+
+                        <div id="analysisBox" class="qr-result-box mb-3 d-none">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                Analysis Summary
+                            </h4>
+
+                            <div id="resultAnalysis"
+                                 class="qr-analysis-chips"
+                                 aria-live="polite">
+
+                            </div>
+
+                        </div>
+
+                        <!-- Verdict -->
+
+                        <div class="qr-result-box mb-3">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                AI Verdict
+                            </h4>
+
+                            <p id="resultVerdict" class="mb-0">
+                                No QR code scanned yet.
+                            </p>
+
+                        </div>
+
+                        <!-- Recommendation -->
+
+                        <div class="qr-result-box mb-3">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                Recommendation
+                            </h4>
+
+                            <p id="resultRecommendation" class="mb-0">
+                                Scan a QR code above to begin the security check.
+                            </p>
+
+                        </div>
+
+                        <!-- Indicators -->
+
+                        <div id="indicatorsBox" class="qr-result-box mb-3">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                Threat Indicators
+                            </h4>
+
+                            <ul id="resultIndicators" class="qr-indicators mb-0">
+
+                            </ul>
+
+                        </div>
+
+                        <!-- Security Checks (URL content only) -->
+
+                        <div id="checksBox" class="qr-result-box d-none">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                Security Checks
+                            </h4>
+
+                            <ul id="resultChecks" class="qr-checks mb-0">
+
+                            </ul>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ==========================
+                         Reset
+                    =========================== -->
+
+                    <div class="text-center mb-4">
+
+                        <button type="button" id="resetBtn"
+                                class="qr-btn-reset btn btn-outline-secondary btn-lg px-5">
+
+                            <i class="fa-solid fa-rotate-left"></i>
+                            Clear / Reset
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+{% endblock %}

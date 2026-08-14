@@ -1,0 +1,737 @@
+{% extends "base.html" %}
+
+{% block title %}GuardianX | AI-Powered Phishing &amp; Scam Detection{% endblock %}
+
+{% block content %}
+
+<div class="ld-root">
+
+    <!-- =========================
+         Navigation
+    ========================= -->
+    <nav class="ld-nav" id="ldNav">
+
+        <div class="ld-nav-inner">
+
+            <a class="ld-brand" href="{{ url_for('home') }}">
+
+                <img
+                    src="{{ url_for('static', filename='images/guardianx-mark.svg') }}"
+                    class="ld-brand-mark"
+                    alt="GuardianX">
+
+                <span class="ld-brand-text">
+                    <strong>Guardian<span>X</span></strong>
+                    <small>AI Security Suite</small>
+                </span>
+
+            </a>
+
+            <button
+                class="ld-hamburger"
+                id="ldHamburger"
+                type="button"
+                aria-expanded="false"
+                aria-controls="ldNavCollapse"
+                aria-label="Toggle navigation menu">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <div class="ld-nav-collapse" id="ldNavCollapse">
+
+                <ul class="ld-nav-links">
+
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#security">Security</a></li>
+                    <li><a href="#about">About</a></li>
+
+                </ul>
+
+                <div class="ld-nav-actions">
+
+                    <a href="{{ url_for('auth.login') }}" class="ld-btn ld-btn-ghost ld-btn-sm">
+                        Sign In
+                    </a>
+
+                    <a href="{{ url_for('auth.register') }}" class="ld-btn ld-btn-primary ld-btn-sm">
+                        Get Started
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =========================
+         Hero
+    ========================= -->
+    <section class="ld-hero">
+
+        <div class="ld-hero-grid">
+
+            <div class="ld-hero-copy">
+
+                <span class="ld-badge">
+                    <span class="ld-badge-dot" aria-hidden="true"></span>
+                    AI-Powered Cyber Security
+                </span>
+
+                <h1 class="ld-hero-title">
+                    Detect threats before
+                    <span>they reach you.</span>
+                </h1>
+
+                <p class="ld-hero-sub">
+                    GuardianX screens emails, SMS, URLs, QR codes and passwords
+                    for phishing and scam patterns — so you can click, reply and
+                    browse with confidence.
+                </p>
+
+                <div class="ld-cta-row">
+
+                    <a href="{{ url_for('auth.register') }}" class="ld-btn ld-btn-primary">
+                        Start Protecting
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                    <a href="{{ url_for('auth.login') }}" class="ld-btn ld-btn-outline">
+                        Sign In
+                    </a>
+
+                </div>
+
+                <ul class="ld-hero-points">
+
+                    <li><i class="fa-solid fa-circle-check"></i> Email &amp; SMS phishing detection</li>
+                    <li><i class="fa-solid fa-circle-check"></i> URL &amp; QR link screening</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Password strength analysis</li>
+
+                </ul>
+
+            </div>
+
+
+            <div class="ld-hero-viz" aria-hidden="true">
+
+                <div class="ld-viz-card">
+
+                    <div class="ld-viz-head">
+
+                        <span class="ld-viz-dot"></span>
+                        <span class="ld-viz-dot"></span>
+                        <span class="ld-viz-dot"></span>
+
+                        <span class="ld-viz-title">GuardianX Threat Scan</span>
+
+                        <span class="ld-viz-live">
+                            <i class="fa-solid fa-circle"></i>
+                            Live
+                        </span>
+
+                    </div>
+
+                    <div class="ld-viz-row">
+
+                        <span class="ld-viz-row-icon"><i class="fa-solid fa-envelope"></i></span>
+
+                        <span class="ld-viz-row-meta">
+                            <strong>Inbox message scanned</strong>
+                            <span>"Your account will be suspended..."</span>
+                        </span>
+
+                        <span class="ld-viz-status blocked">
+                            <i class="fa-solid fa-shield"></i>
+                            Phishing
+                        </span>
+
+                    </div>
+
+                    <div class="ld-viz-row">
+
+                        <span class="ld-viz-row-icon"><i class="fa-solid fa-link"></i></span>
+
+                        <span class="ld-viz-row-meta">
+                            <strong>Link analyzed</strong>
+                            <span>secure-login-update.com</span>
+                        </span>
+
+                        <span class="ld-viz-status blocked">
+                            <i class="fa-solid fa-ban"></i>
+                            Blocked
+                        </span>
+
+                    </div>
+
+                    <div class="ld-viz-row">
+
+                        <span class="ld-viz-row-icon"><i class="fa-solid fa-comment-sms"></i></span>
+
+                        <span class="ld-viz-row-meta">
+                            <strong>Message checked</strong>
+                            <span>"Claim your reward today!"</span>
+                        </span>
+
+                        <span class="ld-viz-status suspect">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            Suspicious
+                        </span>
+
+                    </div>
+
+                    <div class="ld-viz-row">
+
+                        <span class="ld-viz-row-icon"><i class="fa-solid fa-robot"></i></span>
+
+                        <span class="ld-viz-row-meta">
+                            <strong>Verdict confirmed</strong>
+                            <span>Risk score 94 / 100</span>
+                        </span>
+
+                        <span class="ld-viz-status clear">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Contained
+                        </span>
+
+                    </div>
+
+                    <div class="ld-viz-foot">
+
+                        <span class="ld-viz-ring"></span>
+
+                        <span class="ld-viz-foot-meta">
+                            <strong>Protection Active</strong>
+                            <span>All attack surfaces monitored</span>
+                        </span>
+
+                        <span class="ld-viz-foot-note">
+                            <i class="fa-solid fa-lock"></i>
+                            Concept preview
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="ld-viz-float">
+
+                    <i class="fa-solid fa-shield"></i>
+
+                    <span>
+                        <strong>0 threats today</strong>
+                        <span>Threats intercepted</span>
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         Trust Strip
+    ========================= -->
+    <section class="ld-trust" aria-label="GuardianX capabilities">
+
+        <div class="ld-trust-inner">
+
+            <div class="ld-trust-item">
+                <span class="ld-trust-icon"><i class="fa-solid fa-envelope-open-text"></i></span>
+                <span>
+                    <strong>Email &amp; SMS</strong>
+                    <span>Phishing &amp; scam detection</span>
+                </span>
+            </div>
+
+            <div class="ld-trust-item">
+                <span class="ld-trust-icon"><i class="fa-solid fa-link"></i></span>
+                <span>
+                    <strong>URL &amp; QR</strong>
+                    <span>Malicious link screening</span>
+                </span>
+            </div>
+
+            <div class="ld-trust-item">
+                <span class="ld-trust-icon"><i class="fa-solid fa-microchip"></i></span>
+                <span>
+                    <strong>AI Engine</strong>
+                    <span>Rule-based threat analysis</span>
+                </span>
+            </div>
+
+            <div class="ld-trust-item">
+                <span class="ld-trust-icon"><i class="fa-solid fa-lock"></i></span>
+                <span>
+                    <strong>Private &amp; Safe</strong>
+                    <span>Offline, heuristic scanning</span>
+                </span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         Features
+    ========================= -->
+    <section class="ld-sec" id="features">
+
+        <div class="ld-sec-inner">
+
+            <div class="ld-sec-head ld-reveal">
+
+                <span class="ld-eyebrow">Security Tools</span>
+
+                <h2>Six scanners. One security command center.</h2>
+
+                <p>
+                    Every surface scammers target — email, links, messages,
+                    codes and passwords — gets its own dedicated detection tool.
+                </p>
+
+            </div>
+
+            <div class="ld-feature-grid">
+
+                <div class="ld-feature-card ld-reveal">
+
+                    <div class="ld-feature-top">
+                        <span class="ld-feature-icon"><i class="fa-solid fa-envelope-circle-check"></i></span>
+                    </div>
+
+                    <h3>Email Detector</h3>
+                    <p>Paste any suspicious email and get a verdict on phishing headers, links and pressure tactics.</p>
+
+                    <a href="{{ url_for('email_detector.email_detector_home') }}" class="ld-feature-link">
+                        Open tool <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+                <div class="ld-feature-card ld-reveal">
+
+                    <div class="ld-feature-top">
+                        <span class="ld-feature-icon"><i class="fa-solid fa-link"></i></span>
+                    </div>
+
+                    <h3>URL Scanner</h3>
+                    <p>Inspect links for lookalike domains, suspicious redirects and known scam patterns before you click.</p>
+
+                    <a href="{{ url_for('url_detector.url_detector_home') }}" class="ld-feature-link">
+                        Open tool <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+                <div class="ld-feature-card ld-reveal">
+
+                    <div class="ld-feature-top">
+                        <span class="ld-feature-icon"><i class="fa-solid fa-comment-sms"></i></span>
+                    </div>
+
+                    <h3>SMS Detector</h3>
+                    <p>Analyze text messages for prize scams, fake banking alerts and urgent payment requests.</p>
+
+                    <a href="{{ url_for('sms_detector.sms_detector_home') }}" class="ld-feature-link">
+                        Open tool <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+                <div class="ld-feature-card ld-reveal">
+
+                    <div class="ld-feature-top">
+                        <span class="ld-feature-icon"><i class="fa-solid fa-qrcode"></i></span>
+                    </div>
+
+                    <h3>QR Scanner</h3>
+                    <p>Scan QR codes straight from your camera and decode hidden URLs before visiting them.</p>
+
+                    <a href="{{ url_for('qr_scanner.qr_scanner_home') }}" class="ld-feature-link">
+                        Open tool <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+                <div class="ld-feature-card ld-reveal">
+
+                    <div class="ld-feature-top">
+                        <span class="ld-feature-icon"><i class="fa-solid fa-key"></i></span>
+                    </div>
+
+                    <h3>Password Analyzer</h3>
+                    <p>Check how easily your passwords could be cracked and get a clear strength breakdown.</p>
+
+                    <a href="{{ url_for('password_analyzer.password_analyzer_home') }}" class="ld-feature-link">
+                        Open tool <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+                <div class="ld-feature-card ld-reveal">
+
+                    <div class="ld-feature-top">
+                        <span class="ld-feature-icon"><i class="fa-solid fa-robot"></i></span>
+                    </div>
+
+                    <h3>AI Security Copilot</h3>
+                    <p>Ask about any suspicious message or link and get an instant, plain-English risk verdict.</p>
+
+                    <a href="{{ url_for('ai_assistant.assistant_page') }}" class="ld-feature-link">
+                        Open tool <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         How It Works
+    ========================= -->
+    <section class="ld-sec ld-how" id="how-it-works">
+
+        <div class="ld-sec-inner">
+
+            <div class="ld-sec-head ld-reveal">
+
+                <span class="ld-eyebrow">How It Works</span>
+
+                <h2>From scan to verdict in seconds</h2>
+
+                <p>
+                    No plugins, no technical setup. Paste, click and read your result.
+                </p>
+
+            </div>
+
+            <div class="ld-steps">
+
+                <div class="ld-step ld-reveal">
+
+                    <span class="ld-step-num">01</span>
+
+                    <h3>Paste or scan</h3>
+                    <p>
+                        Drop in an email, message, link or QR code — or scan a
+                        code with your camera. Nothing to install.
+                    </p>
+
+                </div>
+
+                <div class="ld-step ld-reveal">
+
+                    <span class="ld-step-num">02</span>
+
+                    <h3>AI risk analysis</h3>
+                    <p>
+                        The GuardianX engine checks for scam keywords, fake domains,
+                        urgency tactics and weak credentials.
+                    </p>
+
+                </div>
+
+                <div class="ld-step ld-reveal">
+
+                    <span class="ld-step-num">03</span>
+
+                    <h3>Verdict &amp; action</h3>
+                    <p>
+                        Get a clear risk score with reasons, then quarantine,
+                        report or mark-safe in one click.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         Security First
+    ========================= -->
+    <section class="ld-sec" id="security">
+
+        <div class="ld-sec-inner">
+
+            <div class="ld-sec-grid">
+
+                <div class="ld-reveal">
+
+                    <div class="ld-sec-head" style="text-align:left; margin-bottom:0;">
+
+                        <span class="ld-eyebrow">Security First</span>
+
+                        <h2>Your data stays yours.</h2>
+
+                        <p>
+                            GuardianX was built around a simple principle: the
+                            tool that protects you should never become a new risk.
+                        </p>
+
+                    </div>
+
+                    <ul class="ld-check-list">
+
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            <span>
+                                <strong>Analysis happens locally.</strong>
+                                Scans run through GuardianX's built-in rule
+                                engine — no third-party AI service receives your content.
+                            </span>
+                        </li>
+
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            <span>
+                                <strong>Nothing is sold or shared.</strong>
+                                Your scans, contacts and reports are never used
+                                for advertising or resold.
+                            </span>
+                        </li>
+
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            <span>
+                                <strong>Uploads are tightly capped.</strong>
+                                File submissions are limited to 16&nbsp;MB and
+                                landed in a dedicated quarantine area.
+                            </span>
+                        </li>
+
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            <span>
+                                <strong>Full control over records.</strong>
+                                Clear your scan history or account data at any time
+                                from your settings.
+                            </span>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+                <div class="ld-sec-panel ld-reveal" aria-hidden="true">
+
+                    <div class="ld-panel-head">
+                        <i class="fa-solid fa-user-shield"></i>
+                        <strong>GuardianX Privacy Card</strong>
+                    </div>
+
+                    <div class="ld-panel-row">
+                        <i class="fa-solid fa-microchip"></i>
+                        <span>Analysis engine</span>
+                        <b>On-device rules</b>
+                    </div>
+
+                    <div class="ld-panel-row">
+                        <i class="fa-solid fa-database"></i>
+                        <span>Scan data storage</span>
+                        <b>Your account only</b>
+                    </div>
+
+                    <div class="ld-panel-row">
+                        <i class="fa-solid fa-file-arrow-up"></i>
+                        <span>Upload limit</span>
+                        <b>16 MB max</b>
+                    </div>
+
+                    <div class="ld-panel-row">
+                        <i class="fa-solid fa-share-nodes"></i>
+                        <span>Third-party sharing</span>
+                        <b>Never</b>
+                    </div>
+
+                    <div class="ld-panel-row">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>History control</span>
+                        <b>Delete anytime</b>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         About
+    ========================= -->
+    <section class="ld-sec ld-about" id="about">
+
+        <div class="ld-sec-inner">
+
+            <div class="ld-sec-head ld-reveal">
+
+                <span class="ld-eyebrow">About GuardianX</span>
+
+                <h2>Guarding the everyday attack surface</h2>
+
+                <p>
+                    Most people aren't targeted by sophisticated hackers — they're
+                    caught by a convincing email, a lookalike link or an urgent
+                    text. GuardianX exists to put a fast, explainable detection
+                    layer between those attacks and you.
+                </p>
+
+            </div>
+
+            <div class="ld-about-stats ld-reveal">
+
+                <div class="ld-about-stat">
+                    <strong>6</strong>
+                    <span>Detection tools</span>
+                </div>
+
+                <div class="ld-about-stat">
+                    <strong>4</strong>
+                    <span>Attack surfaces</span>
+                </div>
+
+                <div class="ld-about-stat">
+                    <strong>100%</strong>
+                    <span>In-app analysis</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         Final CTA
+    ========================= -->
+    <section class="ld-cta">
+
+        <div class="ld-cta-panel ld-reveal">
+
+            <h2>Stop second-guessing every message.</h2>
+
+            <p>
+                Create a free account and put your emails, links and messages
+                through a real threat check — right now.
+            </p>
+
+            <div class="ld-cta-actions">
+
+                <a href="{{ url_for('auth.register') }}" class="ld-btn ld-btn-primary">
+                    Start Protecting
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+                <a href="{{ url_for('auth.login') }}" class="ld-btn ld-btn-outline">
+                    Sign In
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         Footer
+    ========================= -->
+    <footer class="ld-footer">
+
+        <div class="ld-footer-inner">
+
+            <div class="ld-footer-grid">
+
+                <div class="ld-footer-brand">
+
+                    <a class="ld-brand" href="{{ url_for('home') }}">
+
+                        <img
+                            src="{{ url_for('static', filename='images/guardianx-mark.svg') }}"
+                            class="ld-brand-mark"
+                            alt="GuardianX">
+
+                        <span class="ld-brand-text">
+                            <strong>Guardian<span>X</span></strong>
+                            <small>AI Security Suite</small>
+                        </span>
+
+                    </a>
+
+                    <p>
+                        AI-powered phishing and scam detection for email, SMS,
+                        URLs and QR codes.
+                    </p>
+
+                </div>
+
+                <div class="ld-footer-col">
+
+                    <h4>Security Tools</h4>
+
+                    <ul>
+                        <li><a href="{{ url_for('email_detector.email_detector_home') }}">Email Detector</a></li>
+                        <li><a href="{{ url_for('url_detector.url_detector_home') }}">URL Scanner</a></li>
+                        <li><a href="{{ url_for('sms_detector.sms_detector_home') }}">SMS Detector</a></li>
+                        <li><a href="{{ url_for('qr_scanner.qr_scanner_home') }}">QR Scanner</a></li>
+                        <li><a href="{{ url_for('password_analyzer.password_analyzer_home') }}">Password Analyzer</a></li>
+                    </ul>
+
+                </div>
+
+                <div class="ld-footer-col">
+
+                    <h4>Company</h4>
+
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#security">Security</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="{{ url_for('auth.register') }}">Create Account</a></li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+            <div class="ld-footer-bottom">
+
+                <span>© 2026 GuardianX. All rights reserved.</span>
+
+                <span>
+                    <i class="fa-solid fa-heart"></i>
+                    Built to keep you one step ahead.
+                </span>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+</div>
+
+{% endblock %}

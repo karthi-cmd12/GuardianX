@@ -1,0 +1,343 @@
+<aside class="gx-sidebar" aria-label="Primary navigation">
+
+    <!-- ==========================
+         Brand + Collapse Toggle
+    =========================== -->
+
+    <div class="gx-sidebar-head">
+
+        <a href="{{ url_for('dashboard.dashboard_home') }}"
+           class="gx-logo"
+           aria-label="GuardianX dashboard">
+
+            <div class="gx-logo-icon">
+                <img
+                    src="{{ url_for('static', filename='images/guardianx-mark.svg') }}"
+                    alt="GuardianX">
+            </div>
+
+            <div class="gx-logo-text">
+                <strong>GuardianX</strong>
+                <span>AI Security Suite</span>
+            </div>
+
+        </a>
+
+        <button type="button"
+                class="gx-collapse-btn"
+                id="sidebarCollapseBtn"
+                aria-label="Collapse sidebar"
+                title="Collapse sidebar">
+
+            <i class="fa-solid fa-angles-left"></i>
+
+        </button>
+
+    </div>
+
+
+    <!-- ==========================
+         Navigation
+    =========================== -->
+
+    <nav class="gx-nav">
+
+        <p class="gx-nav-label">Main</p>
+
+        <ul class="gx-menu">
+
+            <li class="gx-menu-item {% if request.endpoint == 'dashboard.dashboard_home' %}active{% endif %}">
+
+                <a href="{{ url_for('dashboard.dashboard_home') }}"
+                   data-label="Dashboard"
+                   title="Dashboard">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                    <span class="gx-menu-text">Dashboard</span>
+
+                </a>
+
+            </li>
+
+
+            <li class="gx-menu-item {% if request.endpoint == 'email_detector.email_detector_home' %}active{% endif %}">
+
+                <a href="{{ url_for('email_detector.email_detector_home') }}"
+                   data-label="Email Detector"
+                   title="Email Detector">
+
+                    <i class="fa-solid fa-envelope-circle-check"></i>
+
+                    <span class="gx-menu-text">Email Detector</span>
+
+                </a>
+
+            </li>
+
+
+            <li class="gx-menu-item {% if request.endpoint == 'url_detector.url_detector_home' %}active{% endif %}">
+
+                <a href="{{ url_for('url_detector.url_detector_home') }}"
+                   data-label="URL Scanner"
+                   title="URL Scanner">
+
+                    <i class="fa-solid fa-link"></i>
+
+                    <span class="gx-menu-text">URL Scanner</span>
+
+                </a>
+
+            </li>
+
+
+            <li class="gx-menu-item {% if request.endpoint == 'sms_detector.sms_detector_home' %}active{% endif %}">
+
+                <a href="{{ url_for('sms_detector.sms_detector_home') }}"
+                   data-label="SMS Detector"
+                   title="SMS Detector">
+
+                    <i class="fa-solid fa-comment-sms"></i>
+
+                    <span class="gx-menu-text">SMS Detector</span>
+
+                </a>
+
+            </li>
+
+
+            <li class="gx-menu-item {% if request.endpoint == 'password_analyzer.password_analyzer_home' %}active{% endif %}">
+
+                <a href="{{ url_for('password_analyzer.password_analyzer_home') }}"
+                   data-label="Password Analyzer"
+                   title="Password Analyzer">
+
+                    <i class="fa-solid fa-key"></i>
+
+                    <span class="gx-menu-text">Password Analyzer</span>
+
+                </a>
+
+            </li>
+
+
+            <li class="gx-menu-item {% if request.endpoint == 'qr_scanner.qr_scanner_home' %}active{% endif %}">
+
+                <a href="{{ url_for('qr_scanner.qr_scanner_home') }}"
+                   data-label="QR Scanner"
+                   title="QR Scanner">
+
+                    <i class="fa-solid fa-qrcode"></i>
+
+                    <span class="gx-menu-text">QR Scanner</span>
+
+                </a>
+
+            </li>
+
+
+            <li class="gx-menu-item {% if request.endpoint == 'ai_assistant.assistant_page' %}active{% endif %}">
+
+                <a href="{{ url_for('ai_assistant.assistant_page') }}"
+                   data-label="AI Assistant"
+                   title="AI Assistant">
+
+                    <i class="fa-solid fa-robot"></i>
+
+                    <span class="gx-menu-text">AI Assistant</span>
+
+                </a>
+
+            </li>
+
+        </ul>
+
+
+        <p class="gx-nav-label">Security</p>
+
+        <ul class="gx-menu">
+
+            <li class="gx-menu-item {% if request.endpoint in ['history.history_home', 'history.scan_history_home'] %}active{% endif %}">
+
+                <a href="{{ url_for('history.scan_history_home') }}"
+                   data-label="Scan History"
+                   title="Scan History">
+
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+
+                    <span class="gx-menu-text">Scan History</span>
+
+                </a>
+
+            </li>
+
+
+            <li class="gx-menu-item {% if request.endpoint == 'notifications.notifications_page' %}active{% endif %}">
+
+                <a href="{{ url_for('notifications.notifications_page') }}"
+                   data-label="Notifications"
+                   title="Notifications">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                    <span class="gx-menu-text">Notifications</span>
+
+                </a>
+
+            </li>
+
+        </ul>
+
+
+        <p class="gx-nav-label">Account</p>
+
+        <ul class="gx-menu">
+
+            <li class="gx-menu-item {% if request.endpoint == 'profile.profile_home' %}active{% endif %}">
+
+                <a href="{{ url_for('profile.profile_home') }}"
+                   data-label="Profile"
+                   title="Profile">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <span class="gx-menu-text">Profile</span>
+
+                </a>
+
+            </li>
+
+
+            <li class="gx-menu-item {% if request.endpoint == 'settings.settings_home' %}active{% endif %}">
+
+                <a href="{{ url_for('settings.settings_home') }}"
+                   data-label="Settings"
+                   title="Settings">
+
+                    <i class="fa-solid fa-gear"></i>
+
+                    <span class="gx-menu-text">Settings</span>
+
+                </a>
+
+            </li>
+
+
+            <li class="gx-menu-item">
+
+                <a href="{{ url_for('auth.logout') }}"
+                   data-label="Logout"
+                   title="Logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span class="gx-menu-text">Logout</span>
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+    <!-- ==========================
+         User Footer
+    =========================== -->
+
+    <div class="gx-sidebar-footer">
+
+        <a href="{{ url_for('profile.profile_home') }}"
+           class="gx-user-chip"
+           title="{{ current_user.full_name }}">
+
+            <span class="gx-user-chip-avatar">
+                {{ current_user.full_name[:1]|upper }}
+            </span>
+
+            <span class="gx-user-chip-meta">
+                <strong>{{ current_user.full_name }}</strong>
+                <span>{{ current_user.email }}</span>
+            </span>
+
+        </a>
+
+
+        <!-- ==========================
+             Notification Bell
+        =========================== -->
+
+        <div class="gx-notif" id="gxNotif">
+
+            <button type="button"
+                    class="gx-notif-btn"
+                    id="gxNotifBtn"
+                    aria-label="Notifications"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    title="Notifications">
+
+                <i class="fa-regular fa-bell"></i>
+
+                <span class="gx-notif-badge" id="gxNotifBadge" hidden>0</span>
+
+            </button>
+
+            <div class="gx-notif-panel"
+                 id="gxNotifPanel"
+                 role="dialog"
+                 aria-label="Notifications panel"
+                 hidden>
+
+                <div class="gx-notif-panel-head">
+
+                    <div>
+
+                        <strong>Notifications</strong>
+
+                        <span id="gxNotifSubtitle">No new alerts</span>
+
+                    </div>
+
+                    <button type="button"
+                            id="gxNotifMarkAllBtn"
+                            class="gx-notif-mark-all"
+                            title="Mark all as read">
+
+                        <i class="fa-solid fa-check-double"></i>
+
+                        <span>Mark all read</span>
+
+                    </button>
+
+                </div>
+
+                <div class="gx-notif-list" id="gxNotifList"></div>
+
+                <div class="gx-notif-empty" id="gxNotifEmpty" hidden>
+
+                    <i class="fa-regular fa-bell-slash"></i>
+
+                    <span>You're all caught up.</span>
+
+                </div>
+
+                <a href="{{ url_for('notifications.notifications_page') }}"
+                   class="gx-notif-panel-foot">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                    View all notifications
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>

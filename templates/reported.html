@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+
+{% block title %}
+GuardianX | Reported Emails
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="gx-dashboard">
+
+
+    <!-- Sidebar -->
+
+    {% include "components/sidebar.html" %}
+
+    <div class="gx-overlay"></div>
+
+
+
+    <!-- Main Content -->
+
+    <main class="gx-main">
+
+        <!-- Top Bar -->
+
+        <div class="gx-topbar">
+
+            <button class="gx-hamburger" aria-label="Toggle navigation">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <div class="gx-topbar-title">
+
+                <h1>Reported Emails</h1>
+
+                <p>
+                    Emails reported as suspicious by GuardianX AI.
+                </p>
+
+            </div>
+
+            <div class="gx-top-actions">
+
+                <a href="{{ url_for('auth.logout') }}"
+                   class="gx-topbar-logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>Logout</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- Email Security Navigation -->
+
+        <div class="email-navigation">
+
+
+            <a href="{{ url_for('email_detector.email_detector_home') }}">
+
+                <i class="fa-solid fa-envelope-open-text"></i>
+
+                Scanner
+
+            </a>
+
+
+
+            <a href="{{ url_for('quarantine.quarantine_page') }}">
+
+                <i class="fa-solid fa-box-archive"></i>
+
+                Quarantine
+
+            </a>
+
+
+
+            <a href="{{ url_for('reported.reported_page') }}"
+               class="active">
+
+                <i class="fa-solid fa-flag"></i>
+
+                Reported Emails
+
+            </a>
+
+
+
+            <a href="{{ url_for('safe.safe_page') }}">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+                Safe Emails
+
+            </a>
+
+
+        </div>
+
+
+
+
+
+        <!-- Page Container -->
+
+        <div class="email-page-panel">
+
+
+
+            <!-- Header -->
+
+            <div class="email-page-header">
+
+
+                <div>
+
+                    <h2>
+
+                        <i class="fa-solid fa-flag"></i>
+
+                        Reported Emails
+
+                    </h2>
+
+
+                    <p>
+
+                        Emails reported as suspicious by GuardianX AI.
+
+                    </p>
+
+
+                </div>
+
+
+
+                <span class="badge bg-warning text-dark p-3">
+
+                    {{ emails|length }} Reported
+
+                </span>
+
+
+            </div>
+
+
+
+
+
+
+            <!-- Email Table Panel -->
+
+
+            {% if emails %}
+
+
+
+            <table class="email-table">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Sender
+                        </th>
+
+
+                        <th>
+                            Subject
+                        </th>
+
+
+                        <th>
+                            Risk
+                        </th>
+
+
+                        <th>
+                            Date
+                        </th>
+
+
+                    </tr>
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                {% for email in emails %}
+
+
+                    <tr>
+
+
+                        <td>
+
+                            {{ email.sender }}
+
+                        </td>
+
+
+
+                        <td>
+
+                            {{ email.subject }}
+
+                        </td>
+
+
+
+
+                        <td>
+
+                            <span class="status-warning">
+
+                                {{ email.risk_score }}%
+
+                            </span>
+
+                        </td>
+
+
+
+
+                        <td>
+
+                            {{ email.created_at.strftime('%d-%m-%Y %H:%M') }}
+
+                        </td>
+
+
+                    </tr>
+
+
+                {% endfor %}
+
+
+
+                </tbody>
+
+
+            </table>
+
+
+
+            {% else %}
+
+
+
+            <div class="email-empty">
+
+
+                <i class="fa-solid fa-flag"></i>
+
+
+                <h3>
+
+                    No Reported Emails
+
+                </h3>
+
+
+                <p>
+
+                    Reported suspicious emails will appear here.
+
+                </p>
+
+
+            </div>
+
+
+
+            {% endif %}
+
+
+
+
+        </div>
+
+
+
+    </main>
+
+
+
+</div>
+
+
+
+<footer class="gx-footer">
+
+
+    <p>
+
+        © 2026 GuardianX AI Security Platform
+
+    </p>
+
+
+</footer>
+
+
+
+{% endblock %}

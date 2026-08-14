@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}
+GuardianX | AI Assistant
+{% endblock %}
+
+{% block content %}
+
+<div class="gx-dashboard">
+
+    <!-- Sidebar -->
+
+    {% include "components/sidebar.html" %}
+
+    <div class="gx-overlay"></div>
+
+    <!-- Main Content -->
+
+    <main class="gx-main">
+
+        <!-- ==========================
+             Top Bar
+        =========================== -->
+
+        <div class="gx-topbar">
+
+            <button class="gx-hamburger" aria-label="Toggle navigation">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <div class="gx-topbar-title">
+
+                <h1>AI Assistant</h1>
+
+                <p>Analyze suspicious emails and messages.</p>
+
+            </div>
+
+            <div class="gx-top-actions">
+
+                <span class="gx-badge gx-badge-info">
+
+                    <span class="ai-pulse me-1"></span>
+
+                    AI Protection Active
+
+                </span>
+
+                <a href="{{ url_for('auth.logout') }}"
+                   class="gx-topbar-logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>Logout</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================
+             Chat Card
+        =========================== -->
+
+        <section class="gx-chat gx-animate-in" aria-label="AI threat analysis chat">
+
+            <!-- Chat Header -->
+
+            <header class="gx-chat-header">
+
+                <div class="gx-chat-avatar">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>GuardianX AI</h2>
+
+                    <p>Paste a suspicious email, SMS or message to analyze it.</p>
+
+                </div>
+
+            </header>
+
+
+            <!-- Chat Body -->
+
+            <div class="gx-chat-body" id="chatBody" aria-live="polite">
+
+                <!-- Empty state (replaced once messages exist) -->
+
+                <div class="gx-chat-empty" id="chatEmpty">
+
+                    <i class="fa-solid fa-robot"></i>
+
+                    <h3>How can I help you stay safe?</h3>
+
+                    <p>
+                        Share any message that looks like a phishing scam and
+                        GuardianX AI will return a risk score, reasons and
+                        a recommendation.
+                    </p>
+
+                    <div class="gx-chips">
+
+                        <button type="button" class="gx-chip" data-fill>
+                            "Your account will be blocked. Click here to verify now."
+                        </button>
+
+                        <button type="button" class="gx-chip" data-fill>
+                            "Congratulations! You won a gift card. Claim it at this link."
+                        </button>
+
+                        <button type="button" class="gx-chip" data-fill>
+                            "Invoice overdue. Download the attachment to review payment."
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Chat Input -->
+
+            <footer class="gx-chat-input">
+
+                <textarea
+                    id="chatInput"
+                    class="gx-textarea"
+                    rows="2"
+                    placeholder="Paste a suspicious email or message..."
+                    aria-label="Message to analyze"></textarea>
+
+                <button type="button" id="chatSendBtn"
+                        class="gx-btn gx-btn-primary"
+                        aria-label="Analyze message">
+
+                    <i class="fa-solid fa-paper-plane"></i>
+
+                    <span>Analyze</span>
+
+                </button>
+
+            </footer>
+
+        </section>
+
+    </main>
+
+</div>
+
+{% endblock %}

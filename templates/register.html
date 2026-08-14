@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+
+{% block title %}GuardianX | Register{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="auth-shell">
+
+    <!-- ==========================
+         Visual Panel
+    =========================== -->
+
+    <div class="auth-visual" aria-hidden="true">
+
+        <div class="auth-visual-inner">
+
+            <div class="auth-brand">
+
+                <div class="auth-brand-icon">
+                    <img
+                        src="{{ url_for('static', filename='images/guardianx-mark.svg') }}"
+                        alt="GuardianX">
+                </div>
+
+                <div class="auth-brand-text">
+                    <strong>GuardianX</strong>
+                    <span>AI Security Suite</span>
+                </div>
+
+            </div>
+
+            <h1>
+                Detect threats before
+                <span>they reach you.</span>
+            </h1>
+
+            <p class="auth-visual-sub">
+                GuardianX scans your emails, URLs and messages
+                for phishing, scams and malicious activity in real time.
+            </p>
+
+            <ul class="auth-features">
+
+                <li>
+                    <i class="fa-solid fa-envelope-circle-check"></i>
+                    <div>
+                        <strong>AI Email Detector</strong>
+                        <span>Scan inboxes for phishing attempts</span>
+                    </div>
+                </li>
+
+                <li>
+                    <i class="fa-solid fa-link"></i>
+                    <div>
+                        <strong>URL Intelligence Scanner</strong>
+                        <span>Analyze links before you click</span>
+                    </div>
+                </li>
+
+                <li>
+                    <i class="fa-solid fa-robot"></i>
+                    <div>
+                        <strong>AI Security Copilot</strong>
+                        <span>Instant risk verdicts on any message</span>
+                    </div>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================
+         Form Panel
+    =========================== -->
+
+    <div class="auth-form-side">
+
+        <div class="auth-form-inner">
+
+            <div class="auth-form-header">
+
+                <div class="auth-form-logo">
+                    <img
+                        src="{{ url_for('static', filename='images/guardianx-mark.svg') }}"
+                        alt="GuardianX">
+                </div>
+
+                <h2>
+                    Create your account
+                </h2>
+
+                <p>
+                    Join GuardianX and secure your digital world.
+                </p>
+
+            </div>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('auth.register') }}" method="POST" id="registerForm">
+
+                <div class="mb-3">
+
+                    <label class="form-label" for="full_name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="full_name"
+                        name="full_name"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label" for="username">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="username"
+                        name="username"
+                        placeholder="Choose a username"
+                        autocomplete="username"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label" for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label" for="mobile">
+                        Mobile Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        class="form-control"
+                        id="mobile"
+                        name="mobile"
+                        placeholder="Enter your mobile number"
+                        maxlength="15"
+                        pattern="[0-9]{10,15}"
+                        autocomplete="tel"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label" for="password">
+                        Password
+                    </label>
+
+                    <div class="input-group">
+
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                            placeholder="Create a password"
+                            autocomplete="new-password"
+                            required>
+
+                        <button
+                            class="btn btn-outline-secondary"
+                            type="button"
+                            id="togglePassword"
+                            aria-label="Show or hide password">
+
+                            <i class="fa-solid fa-eye"></i>
+
+                        </button>
+
+                    </div>
+
+                    <div class="progress mt-3" style="height:8px;">
+
+                        <div
+                            id="passwordStrength"
+                            class="progress-bar"
+                            style="width:0%;">
+
+                        </div>
+
+                    </div>
+
+                    <small
+                        id="strengthText"
+                        class="text-muted">
+
+                        Password Strength
+
+                    </small>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label class="form-label" for="confirm_password">
+                        Confirm Password
+                    </label>
+
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="confirm_password"
+                        name="confirm_password"
+                        placeholder="Confirm your password"
+                        autocomplete="new-password"
+                        required>
+
+                </div>
+
+                <button
+                    type="submit"
+                    id="registerSubmitBtn"
+                    class="btn btn-primary w-100 login-btn">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                    Create Account
+
+                </button>
+
+            </form>
+
+            <p class="auth-form-switch">
+
+                Already have an account?
+
+                <a href="{{ url_for('auth.login') }}">
+
+                    Log in
+
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+{% endblock %}

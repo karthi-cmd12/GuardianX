@@ -1,0 +1,371 @@
+{% extends "base.html" %}
+
+{% block title %}
+GuardianX | URL Scanner
+{% endblock %}
+
+{% block content %}
+
+<div class="gx-dashboard">
+
+    <!-- Sidebar -->
+
+    {% include "components/sidebar.html" %}
+
+    <div class="gx-overlay"></div>
+
+    <!-- Main Content -->
+
+    <main class="gx-main">
+
+        <!-- ==========================
+             Top Bar
+        =========================== -->
+
+        <div class="gx-topbar">
+
+            <button class="gx-hamburger" aria-label="Toggle navigation">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <div class="gx-topbar-title">
+
+                <h1>URL Scanner</h1>
+
+                <p>Analyze links before you click.</p>
+
+            </div>
+
+            <div class="gx-top-actions">
+
+                <span class="gx-badge gx-badge-success">
+
+                    <span class="url-pulse me-1"></span>
+
+                    AI Protection Active
+
+                </span>
+
+                <a href="{{ url_for('auth.logout') }}"
+                   class="gx-topbar-logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>Logout</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="container-fluid px-0">
+
+            <div class="row justify-content-center">
+
+                <div class="col-xl-8 col-lg-9">
+
+                    <!-- ==========================
+                         Page Header
+                    =========================== -->
+
+                    <header class="url-header text-center mb-4 gx-animate-in">
+
+                        <div class="url-header-icon mx-auto mb-3">
+
+                            <i class="fa-solid fa-link"></i>
+
+                        </div>
+
+                        <h1 class="fw-bold">
+                            URL Scanner
+                        </h1>
+
+                        <p class="mx-auto">
+                            GuardianX analyzes URLs for phishing and
+                            suspicious patterns before you click.
+                        </p>
+
+                    </header>
+
+
+                    <!-- ==========================
+                         URL Input Card
+                    =========================== -->
+
+                    <section class="url-card card border-0 shadow-lg rounded-4 p-4 p-md-5 mb-4 gx-animate-in"
+                             aria-label="URL scanner input">
+
+                        <div class="text-center mb-4">
+
+                            <div class="url-icon mx-auto">
+
+                                <i class="fa-solid fa-shield-halved"></i>
+
+                            </div>
+
+                            <h2 class="h4 fw-semibold mt-3 mb-1">
+                                Scan a URL
+                            </h2>
+
+                            <p class="text-secondary mb-0">
+                                Paste any web address and GuardianX will
+                                check it for phishing and scam indicators.
+                            </p>
+
+                        </div>
+
+                        <form id="urlScanForm" class="url-form" novalidate>
+
+                            <div class="mb-4">
+
+                                <label for="urlInput" class="form-label fw-semibold">
+                                    URL to scan
+                                </label>
+
+                                <div class="input-group input-group-lg">
+
+                                    <span class="input-group-text">
+
+                                        <i class="fa-solid fa-link"></i>
+
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        class="form-control url-input"
+                                        id="urlInput"
+                                        name="url"
+                                        placeholder="https://example.com"
+                                        inputmode="url"
+                                        autocomplete="off"
+                                        spellcheck="false"
+                                        autocapitalize="none">
+
+                                </div>
+
+                            </div>
+
+                            <div class="url-actions d-flex flex-column flex-sm-row gap-3">
+
+                                <button type="submit" id="scanBtn"
+                                        class="url-btn btn btn-primary btn-lg flex-fill">
+
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    Scan URL
+
+                                </button>
+
+                                <button type="button" id="clearBtn"
+                                        class="url-btn-clear btn btn-outline-secondary btn-lg flex-fill">
+
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                    Clear
+
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </section>
+
+
+                    <!-- ==========================
+                         Loading State
+                    =========================== -->
+
+                    <div id="loadingState"
+                         class="url-loading text-center py-4 d-none"
+                         aria-live="polite">
+
+                        <i class="fa-solid fa-spinner fa-spin fa-3x text-primary"></i>
+
+                        <p class="text-light mt-3 mb-0">
+                            Analyzing URL security...
+                        </p>
+
+                    </div>
+
+
+                    <!-- ==========================
+                         Result Section
+                    =========================== -->
+
+                    <section id="resultCard"
+                             class="url-result-card card border-0 shadow-lg rounded-4 p-4 p-md-5 mb-4 d-none"
+                             aria-label="URL security analysis result">
+
+                        <h2 class="h4 fw-semibold mb-4">
+
+                            <i class="fa-solid fa-chart-line"></i>
+
+                            Security Analysis
+
+                        </h2>
+
+                        <!-- API Error -->
+
+                        <div id="resultError"
+                             class="alert alert-danger d-none"
+                             role="alert">
+
+                            <i class="fa-solid fa-triangle-exclamation me-2"></i>
+
+                            <span id="resultErrorMessage"></span>
+
+                        </div>
+
+                        <!-- Risk Score -->
+
+                        <div class="url-result-score text-center mb-4">
+
+                            <h3 class="text-secondary small text-uppercase mb-2">
+                                Risk Score
+                            </h3>
+
+                            <div id="resultScore"
+                                 class="display-4 fw-bold text-white">
+                                &mdash;
+                            </div>
+
+                            <span id="resultBadge"
+                                  class="url-result-badge badge rounded-pill px-4 py-2 mt-2">
+                                N/A
+                            </span>
+
+                            <div class="url-score-meter mt-4"
+                                 role="progressbar"
+                                 aria-label="Risk score"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+
+                                <div class="url-score-bar"
+                                     id="resultProgress"></div>
+
+                            </div>
+
+                            <p class="url-score-scale text-uppercase mt-2 mb-0">
+                                <span>Safe</span>
+                                <span>Risky</span>
+                            </p>
+
+                        </div>
+
+                        <!-- URL Details -->
+
+                        <div class="url-result-box mb-3">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                URL Details
+                            </h4>
+
+                            <div class="url-details-grid">
+
+                                <div>
+                                    <span>Protocol</span>
+                                    <strong id="resultScheme">&mdash;</strong>
+                                </div>
+
+                                <div>
+                                    <span>Hostname</span>
+                                    <strong id="resultHostname">&mdash;</strong>
+                                </div>
+
+                                <div>
+                                    <span>Host Type</span>
+                                    <strong id="resultHostType">&mdash;</strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Analysis Summary -->
+
+                        <div class="url-result-box mb-3">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                Analysis Summary
+                            </h4>
+
+                            <div id="resultAnalysis"
+                                 class="url-analysis-chips"
+                                 aria-live="polite">
+
+                            </div>
+
+                        </div>
+
+                        <!-- Verdict -->
+
+                        <div class="url-result-box mb-3">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                AI Verdict
+                            </h4>
+
+                            <p id="resultVerdict" class="mb-0">
+                                No URL scanned yet.
+                            </p>
+
+                        </div>
+
+                        <!-- Recommendation -->
+
+                        <div class="url-result-box mb-3">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                Recommendation
+                            </h4>
+
+                            <p id="resultRecommendation" class="mb-0">
+                                Enter a URL above to begin the security check.
+                            </p>
+
+                        </div>
+
+                        <!-- Indicators -->
+
+                        <div class="url-result-box mb-3">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                Threat Indicators
+                            </h4>
+
+                            <ul id="resultIndicators" class="url-indicators mb-0">
+
+                            </ul>
+
+                        </div>
+
+                        <!-- Security Checks -->
+
+                        <div class="url-result-box">
+
+                            <h4 class="h6 fw-semibold mb-1">
+                                Security Checks
+                            </h4>
+
+                            <ul id="resultChecks" class="url-checks mb-0">
+
+                            </ul>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+{% endblock %}

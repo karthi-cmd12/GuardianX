@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+
+{% block title %}
+GuardianX | Notifications
+{% endblock %}
+
+{% block content %}
+
+<div class="gx-dashboard nt-page">
+
+    <!-- Sidebar -->
+
+    {% include "components/sidebar.html" %}
+
+    <div class="gx-overlay"></div>
+
+    <!-- Main Content -->
+
+    <main class="gx-main">
+
+        <!-- ==========================
+             Top Bar
+        =========================== -->
+
+        <div class="gx-topbar">
+
+            <button class="gx-hamburger" aria-label="Toggle navigation">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <div class="gx-topbar-title">
+
+                <h1>Notification Center</h1>
+
+                <p>Review your security alerts and scan findings.</p>
+
+            </div>
+
+            <div class="gx-top-actions">
+
+                <span class="gx-badge gx-badge-info">
+
+                    <span class="gx-pulse-dot"></span>
+
+                    AI Protection Active
+
+                </span>
+
+                <a href="{{ url_for('auth.logout') }}"
+                   class="gx-topbar-logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>Logout</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================
+             Page Header
+        =========================== -->
+
+        <header class="nt-hero gx-animate-in">
+
+            <div class="nt-hero-bg" aria-hidden="true"></div>
+
+            <div class="nt-hero-copy">
+
+                <span class="gx-badge gx-badge-info gx-hero-badge">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                    Security Alerts
+
+                </span>
+
+                <h1>Notification Center</h1>
+
+                <p>
+                    Every suspicious scan, weak password and detected threat
+                    is collected here. Alerts belong to you and are never
+                    shared with other users.
+                </p>
+
+            </div>
+
+            <div class="nt-hero-actions">
+
+                <button type="button"
+                        id="ntRefreshBtn"
+                        class="gx-btn gx-btn-ghost"
+                        title="Refresh notifications">
+
+                    <i class="fa-solid fa-rotate"></i>
+
+                    Refresh
+
+                </button>
+
+                <button type="button"
+                        id="ntMarkAllBtn"
+                        class="gx-btn gx-btn-ghost"
+                        title="Mark all notifications as read">
+
+                    <i class="fa-solid fa-check-double"></i>
+
+                    Mark All Read
+
+                </button>
+
+                <button type="button"
+                        id="ntClearAllBtn"
+                        class="gx-btn nt-btn-danger"
+                        title="Delete all of your notifications">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Clear All
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- ==========================
+             Summary Cards
+        =========================== -->
+
+        <section class="nt-stats" aria-label="Notification summary">
+
+            <div class="nt-stat-card nt-stat-total gx-animate-in">
+
+                <div class="nt-stat-icon">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                </div>
+
+                <div class="nt-stat-info">
+
+                    <span class="nt-stat-label">Total Alerts</span>
+
+                    <h3 id="ntStatTotal" data-count="0">0</h3>
+
+                </div>
+
+            </div>
+
+            <div class="nt-stat-card nt-stat-unread gx-animate-in">
+
+                <div class="nt-stat-icon">
+
+                    <i class="fa-solid fa-circle-exclamation"></i>
+
+                </div>
+
+                <div class="nt-stat-info">
+
+                    <span class="nt-stat-label">Unread</span>
+
+                    <h3 id="ntStatUnread" data-count="0">0</h3>
+
+                </div>
+
+            </div>
+
+            <div class="nt-stat-card nt-stat-high gx-animate-in">
+
+                <div class="nt-stat-icon">
+
+                    <i class="fa-solid fa-shield-virus"></i>
+
+                </div>
+
+                <div class="nt-stat-info">
+
+                    <span class="nt-stat-label">High Risk</span>
+
+                    <h3 id="ntStatHigh" data-count="0">0</h3>
+
+                </div>
+
+            </div>
+
+            <div class="nt-stat-card nt-stat-critical gx-animate-in">
+
+                <div class="nt-stat-icon">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                </div>
+
+                <div class="nt-stat-info">
+
+                    <span class="nt-stat-label">Critical</span>
+
+                    <h3 id="ntStatCritical" data-count="0">0</h3>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Filters
+        =========================== -->
+
+        <section class="gx-card nt-filters gx-animate-in"
+                 aria-label="Notification filters">
+
+            <div class="nt-filters-grid">
+
+                <div class="nt-filter-field">
+
+                    <label for="ntSeverity">Severity</label>
+
+                    <select id="ntSeverity">
+
+                        <option value="">All</option>
+
+                        <option value="INFO">INFO</option>
+
+                        <option value="LOW">LOW</option>
+
+                        <option value="MEDIUM">MEDIUM</option>
+
+                        <option value="HIGH">HIGH</option>
+
+                        <option value="CRITICAL">CRITICAL</option>
+
+                    </select>
+
+                </div>
+
+                <div class="nt-filter-field">
+
+                    <label for="ntType">Type</label>
+
+                    <select id="ntType">
+
+                        <option value="">All</option>
+
+                        <option value="email">Email</option>
+
+                        <option value="url">URL</option>
+
+                        <option value="sms">SMS</option>
+
+                        <option value="qr">QR</option>
+
+                        <option value="password">Password</option>
+
+                        <option value="ai_assistant">AI Assistant</option>
+
+                        <option value="history">History</option>
+
+                        <option value="system">System</option>
+
+                    </select>
+
+                </div>
+
+                <div class="nt-filter-field">
+
+                    <label for="ntRead">Status</label>
+
+                    <select id="ntRead">
+
+                        <option value="">All</option>
+
+                        <option value="unread">Unread</option>
+
+                        <option value="read">Read</option>
+
+                    </select>
+
+                </div>
+
+                <div class="nt-filter-actions">
+
+                    <button type="button"
+                            id="ntClearFiltersBtn"
+                            class="gx-btn gx-btn-ghost"
+                            title="Clear all filters">
+
+                        <i class="fa-solid fa-filter-circle-xmark"></i>
+
+                        Clear Filters
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             Error Banner
+        =========================== -->
+
+        <div id="ntError"
+             class="nt-error d-none"
+             role="alert">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+            <span id="ntErrorMessage"></span>
+
+        </div>
+
+
+        <!-- ==========================
+             Loading State
+        =========================== -->
+
+        <div id="ntLoading"
+             class="nt-loading"
+             role="status"
+             aria-live="polite">
+
+            <span class="nt-spinner" aria-hidden="true"></span>
+
+            <p>Loading your notifications...</p>
+
+        </div>
+
+
+        <!-- ==========================
+             Notification List
+        =========================== -->
+
+        <section class="gx-card nt-list-card gx-animate-in">
+
+            <div class="nt-list-head">
+
+                <div>
+
+                    <h3>
+
+                        <i class="fa-regular fa-bell"></i>
+
+                        Alerts
+
+                    </h3>
+
+                    <p id="ntResultMeta">No alerts yet.</p>
+
+                </div>
+
+                <span id="ntCountBadge" class="gx-badge gx-badge-info">0 alerts</span>
+
+            </div>
+
+            <div id="ntList"></div>
+
+            <!-- Empty State -->
+
+            <div id="ntEmpty" class="nt-empty d-none">
+
+                <i class="fa-regular fa-bell-slash"></i>
+
+                <h3 id="ntEmptyTitle">No alerts yet</h3>
+
+                <p id="ntEmptyText">
+                    Security alerts will appear here automatically when a scan
+                    finds something suspicious.
+                </p>
+
+                <div class="nt-empty-actions">
+
+                    <a href="{{ url_for('dashboard.dashboard_home') }}"
+                       class="gx-btn gx-btn-primary">
+
+                        <i class="fa-solid fa-chart-line"></i>
+
+                        Go to Dashboard
+
+                    </a>
+
+                    <a href="{{ url_for('url_detector.url_detector_home') }}"
+                       class="gx-btn gx-btn-outline">
+
+                        <i class="fa-solid fa-link"></i>
+
+                        Scan URL
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+{% endblock %}

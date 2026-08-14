@@ -1,0 +1,1135 @@
+/* ==========================================================
+   GuardianX Login & Register
+   Part 1
+========================================================== */
+
+/* ===========================
+   Login Page
+=========================== */
+
+.login-page{
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:120px 0;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+/* Cyber Background */
+
+.login-page::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+
+    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+
+    background-size:45px 45px;
+
+    opacity:.35;
+
+    z-index:0;
+
+}
+
+.login-page::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:650px;
+
+    height:650px;
+
+    background:radial-gradient(circle,
+        rgba(0,198,255,.18),
+        transparent 70%);
+
+    top:-250px;
+
+    right:-250px;
+
+    z-index:0;
+
+}
+
+/* ===========================
+   Login Card
+=========================== */
+
+.login-card{
+
+    position:relative;
+
+    z-index:5;
+
+    background:rgba(255,255,255,.05);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:22px;
+
+    padding:45px;
+
+    box-shadow:0 20px 50px rgba(0,0,0,.45);
+
+    transition:.35s ease;
+
+}
+
+.login-card:hover{
+
+    transform:translateY(-8px);
+
+    border-color:rgba(0,198,255,.35);
+
+}
+
+/* ===========================
+   Logo
+=========================== */
+
+.login-logo{
+
+    font-size:70px;
+
+    background:linear-gradient(
+        135deg,
+        #00C6FF,
+        #7B2FF7
+    );
+
+    -webkit-background-clip:text;
+
+    -webkit-text-fill-color:transparent;
+
+}
+
+.login-card h2{
+
+    font-weight:700;
+
+    color:white;
+
+}
+
+.login-card h2 span{
+
+    color:#00C6FF;
+
+}
+
+.login-card p{
+
+    color:#94A3B8;
+
+}
+
+/* ===========================
+   Labels
+=========================== */
+
+.form-label{
+
+    color:white;
+
+    font-weight:600;
+
+    margin-bottom:8px;
+
+}
+
+/* ===========================
+   Register Form Spacing
+=========================== */
+
+.mb-3{
+
+    margin-bottom:20px !important;
+
+}
+
+.form-label{
+
+    display:block;
+
+    margin-bottom:10px;
+
+}
+/* ===========================
+   Inputs
+=========================== */
+
+.form-control{
+
+    background:rgba(255,255,255,.05);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    color:white;
+
+    height:52px;
+
+    border-radius:12px;
+
+}
+
+.form-control:focus{
+
+    background:rgba(255,255,255,.07);
+
+    color:white;
+
+    border-color:#00C6FF;
+
+    box-shadow:0 0 15px rgba(0,198,255,.20);
+
+}
+
+.form-control::placeholder{
+
+    color:#94A3B8;
+
+}
+
+/* ===========================
+   Input Group
+=========================== */
+
+.input-group .btn{
+
+    border-radius:0 12px 12px 0;
+
+    border-color:rgba(255,255,255,.08);
+
+    background:rgba(255,255,255,.05);
+
+    color:white;
+
+}
+
+.input-group .btn:hover{
+
+    background:#00C6FF;
+
+    color:white;
+
+}
+
+/* ===========================
+   Login Button
+=========================== */
+
+.login-btn{
+
+    height:52px;
+
+    border:none;
+
+    border-radius:12px;
+
+    font-weight:600;
+
+    background:linear-gradient(
+        135deg,
+        #00C6FF,
+        #7B2FF7
+    );
+
+    transition:.35s;
+
+}
+
+.login-btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 12px 25px rgba(0,198,255,.35);
+
+}
+
+.login-btn:disabled{
+
+    opacity:.75;
+
+    cursor:not-allowed;
+
+    transform:none;
+
+    box-shadow:none;
+
+}
+
+/* ===========================
+   Inline Form Errors
+=========================== */
+
+.gx-form-error{
+
+    display:block;
+
+    margin-top:6px;
+
+    color:#FF4D6D;
+
+    font-size:12.5px;
+
+    font-weight:500;
+
+}
+
+.is-invalid{
+
+    border-color:#FF4D6D !important;
+
+}
+
+.is-invalid:focus{
+
+    box-shadow:0 0 0 .2rem rgba(255,77,109,.25) !important;
+
+}
+
+/* ===========================
+   Links
+=========================== */
+
+.login-card a{
+
+    color:#00C6FF;
+
+    text-decoration:none;
+
+    font-weight:500;
+
+}
+
+.login-card a:hover{
+
+    color:white;
+
+}
+
+/* ===========================
+   Divider
+=========================== */
+
+.login-card hr{
+
+    border-color:rgba(255,255,255,.08);
+
+}
+
+/* ==========================================================
+   GuardianX Login & Register
+   Part 2
+========================================================== */
+
+
+/* ===========================
+   Flash Messages
+=========================== */
+
+.alert{
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:14px 18px;
+
+    margin-bottom:20px;
+
+    font-weight:500;
+
+}
+
+.alert-success{
+
+    background:rgba(0,230,118,.18);
+
+    color:#00E676;
+
+}
+
+.alert-danger{
+
+    background:rgba(255,77,109,.18);
+
+    color:#FF4D6D;
+
+}
+
+.alert-warning{
+
+    background:rgba(255,200,87,.18);
+
+    color:#FFC857;
+
+}
+
+.alert-info{
+
+    background:rgba(0,198,255,.18);
+
+    color:#00C6FF;
+
+}
+
+
+/* ===========================
+   Checkbox
+=========================== */
+
+.form-check-input{
+
+    background-color:rgba(255,255,255,.08);
+
+    border:1px solid rgba(255,255,255,.20);
+
+}
+
+.form-check-input:checked{
+
+    background-color:#00C6FF;
+
+    border-color:#00C6FF;
+
+}
+
+.form-check-label{
+
+    color:#C9D1D9;
+
+}
+
+
+/* ===========================
+   Forgot Password
+=========================== */
+
+.forgot-link{
+
+    color:#00C6FF;
+
+    font-size:14px;
+
+}
+
+.forgot-link:hover{
+
+    color:#ffffff;
+
+}
+
+
+/* ===========================
+   Password Strength
+=========================== */
+
+.progress{
+
+    background:rgba(255,255,255,.08);
+
+    border-radius:50px;
+
+}
+
+.progress-bar{
+
+    transition:.4s ease;
+
+    border-radius:50px;
+
+}
+
+#strengthText{
+
+    display:block;
+
+    margin-top:8px;
+
+    color:#94A3B8 !important;
+
+}
+
+
+/* ===========================
+   Login Animation
+=========================== */
+
+.login-card{
+
+    animation:loginFade .8s ease;
+
+}
+
+@keyframes loginFade{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(40px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+
+/* ===========================
+   Floating Logo
+=========================== */
+
+.login-logo{
+
+    animation:floatLogo 4s ease-in-out infinite;
+
+}
+
+@keyframes floatLogo{
+
+    0%{
+
+        transform:translateY(0px);
+
+    }
+
+    50%{
+
+        transform:translateY(-10px);
+
+    }
+
+    100%{
+
+        transform:translateY(0px);
+
+    }
+
+}
+
+
+/* ===========================
+   Responsive - Tablet
+=========================== */
+
+@media (max-width:992px){
+
+.login-card{
+
+    padding:35px;
+
+}
+
+.login-logo{
+
+    font-size:60px;
+
+}
+
+}
+
+
+/* ===========================
+   Responsive - Mobile
+=========================== */
+
+@media (max-width:768px){
+
+.login-page{
+
+    padding:100px 20px;
+
+}
+
+.login-card{
+
+    padding:30px 22px;
+
+}
+
+.login-card h2{
+
+    font-size:28px;
+
+}
+
+.login-logo{
+
+    font-size:55px;
+
+}
+
+.login-btn{
+
+    height:50px;
+
+}
+
+}
+
+
+/* ===========================
+   Small Mobile
+=========================== */
+
+@media (max-width:480px){
+
+.login-card{
+
+    padding:22px 18px;
+
+}
+
+.login-card h2{
+
+    font-size:24px;
+
+}
+
+.login-logo{
+
+    font-size:48px;
+
+}
+
+.form-control{
+
+    height:48px;
+
+}
+
+.login-btn{
+
+    height:48px;
+
+}
+
+}
+
+
+/* ===========================
+   Autofill Fix
+=========================== */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus{
+
+    -webkit-text-fill-color:white;
+
+    transition:background-color 9999s ease-in-out 0s;
+
+}
+
+
+/* ===========================
+   Selection
+=========================== */
+
+::selection{
+
+    background:#00C6FF;
+
+    color:#ffffff;
+
+}
+
+
+/* ==========================================================
+   GuardianX Split-Screen Auth Shell
+   (login.html / register.html)
+   ========================================================== */
+
+.auth-shell{
+
+    min-height:100vh;
+
+    display:grid;
+
+    grid-template-columns:1.05fr 1fr;
+
+    background:var(--gx-bg, #050816);
+
+    color:var(--gx-text, #e2e8f0);
+
+    font-family:"Segoe UI", system-ui, -apple-system, sans-serif;
+
+}
+
+/* ===========================
+   Visual Panel
+=========================== */
+
+.auth-visual{
+
+    position:relative;
+
+    display:flex;
+
+    align-items:center;
+
+    padding:56px 9% 56px 9%;
+
+    overflow:hidden;
+
+    background:
+    radial-gradient(900px 600px at 15% 0%, rgba(123,47,247,.25), transparent 60%),
+    radial-gradient(800px 600px at 100% 100%, rgba(0,198,255,.18), transparent 60%),
+    linear-gradient(160deg, #0B1020 0%, #050816 100%);
+
+    border-right:1px solid rgba(255,255,255,.08);
+
+}
+
+/* Cyber grid overlay */
+
+.auth-visual::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+
+    background-size:46px 46px;
+
+    mask-image:radial-gradient(ellipse at center, #000 30%, transparent 75%);
+
+    -webkit-mask-image:radial-gradient(ellipse at center, #000 30%, transparent 75%);
+
+}
+
+.auth-visual-inner{
+
+    position:relative;
+
+    z-index:2;
+
+    max-width:520px;
+
+}
+
+/* Brand */
+
+.auth-brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    margin-bottom:52px;
+
+}
+
+.auth-brand-icon{
+
+    width:48px;
+
+    height:48px;
+
+    display:grid;
+
+    place-items:center;
+
+    border-radius:14px;
+
+    background:linear-gradient(135deg, #00C6FF, #7B2FF7);
+
+    box-shadow:0 0 26px rgba(0,198,255,.4);
+
+    color:#fff;
+
+    font-size:22px;
+
+}
+
+.auth-brand-text{
+
+    display:flex;
+
+    flex-direction:column;
+
+    line-height:1.15;
+
+}
+
+.auth-brand-text strong{
+
+    font-size:20px;
+
+    letter-spacing:.4px;
+
+    background:linear-gradient(90deg, #00C6FF, #7B2FF7);
+
+    -webkit-background-clip:text;
+
+    background-clip:text;
+
+    -webkit-text-fill-color:transparent;
+
+}
+
+.auth-brand-text span{
+
+    font-size:11.5px;
+
+    color:#94A3B8;
+
+    letter-spacing:.6px;
+
+}
+
+/* Headline */
+
+.auth-visual h1{
+
+    margin:0 0 18px;
+
+    font-size:clamp(1.9rem, 3.2vw, 2.7rem);
+
+    font-weight:800;
+
+    line-height:1.2;
+
+    letter-spacing:.2px;
+
+    color:#fff;
+
+}
+
+.auth-visual h1 span{
+
+    color:#00C6FF;
+
+}
+
+.auth-visual-sub{
+
+    margin:0 0 40px;
+
+    font-size:15px;
+
+    line-height:1.75;
+
+    color:#94A3B8;
+
+    max-width:440px;
+
+}
+
+/* Feature bullets */
+
+.auth-features{
+
+    list-style:none;
+
+    margin:0;
+
+    padding:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+}
+
+.auth-features li{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+    padding:16px 18px;
+
+    border-radius:16px;
+
+    background:rgba(255,255,255,.04);
+
+    border:1px solid rgba(255,255,255,.07);
+
+    backdrop-filter:blur(8px);
+
+    transition:all .25s ease;
+
+}
+
+.auth-features li:hover{
+
+    background:rgba(255,255,255,.07);
+
+    border-color:rgba(0,198,255,.3);
+
+    transform:translateX(6px);
+
+}
+
+.auth-features i{
+
+    width:44px;
+
+    height:44px;
+
+    flex-shrink:0;
+
+    display:grid;
+
+    place-items:center;
+
+    border-radius:12px;
+
+    background:linear-gradient(135deg, rgba(0,198,255,.18), rgba(123,47,247,.18));
+
+    border:1px solid rgba(0,198,255,.25);
+
+    color:#00C6FF;
+
+    font-size:18px;
+
+}
+
+.auth-features strong{
+
+    display:block;
+
+    font-size:14.5px;
+
+    color:#E2E8F0;
+
+    margin-bottom:2px;
+
+}
+
+.auth-features span{
+
+    font-size:13px;
+
+    color:#94A3B8;
+
+}
+
+/* ===========================
+   Form Panel
+=========================== */
+
+.auth-form-side{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:48px 7%;
+
+    position:relative;
+
+}
+
+.auth-form-inner{
+
+    width:100%;
+
+    max-width:440px;
+
+}
+
+.auth-form-header{
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+}
+
+.auth-form-logo{
+
+    width:64px;
+
+    height:64px;
+
+    margin:0 auto 18px;
+
+    display:grid;
+
+    place-items:center;
+
+    border-radius:18px;
+
+    background:linear-gradient(135deg, #00C6FF, #7B2FF7);
+
+    box-shadow:0 0 32px rgba(0,198,255,.35);
+
+    color:#fff;
+
+    font-size:28px;
+
+    animation:floatLogo 4s ease-in-out infinite;
+
+}
+
+.auth-form-header h2{
+
+    margin:0 0 8px;
+
+    font-size:26px;
+
+    font-weight:700;
+
+    color:#fff;
+
+}
+
+.auth-form-header p{
+
+    margin:0;
+
+    font-size:14px;
+
+    color:#94A3B8;
+
+}
+
+.auth-form-switch{
+
+    margin:24px 0 0;
+
+    text-align:center;
+
+    font-size:14px;
+
+    color:#94A3B8;
+
+}
+
+.auth-form-switch a{
+
+    color:#00C6FF;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+}
+
+.auth-form-switch a:hover{
+
+    color:#fff;
+
+}
+
+/* ===========================
+   Brand Mark Images
+=========================== */
+
+.auth-brand-icon img,
+.auth-form-logo img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:contain;
+
+    border-radius:14px;
+
+    padding:9px;
+
+}
+
+.auth-form-logo img{
+
+    border-radius:18px;
+
+    padding:13px;
+
+}
+
+/* ===========================
+   Split-Shell Responsive
+=========================== */
+
+@media (max-width:1023px){
+
+    .auth-shell{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .auth-visual{
+
+        display:none;
+
+    }
+
+    .auth-form-side{
+
+        min-height:100vh;
+
+        padding:56px 24px;
+
+        background:
+        radial-gradient(800px 500px at 90% -10%, rgba(123,47,247,.2), transparent 60%),
+        radial-gradient(700px 500px at -10% 110%, rgba(0,198,255,.16), transparent 60%),
+        #050816;
+
+    }
+
+}
+
+@media (max-width:480px){
+
+    .auth-form-side{
+
+        padding:40px 18px;
+
+    }
+
+    .auth-form-header h2{
+
+        font-size:23px;
+
+    }
+
+}
+

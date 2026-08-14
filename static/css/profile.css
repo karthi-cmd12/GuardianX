@@ -1,0 +1,816 @@
+/* ==========================================================
+   GuardianX Profile Page (profile.css)
+   Premium glass design consistent with the GuardianX design
+   system (dark navy, cyan, purple, glassmorphism, soft glow).
+========================================================== */
+
+
+/* ==========================================================
+   1. Profile Header
+========================================================== */
+
+.pf-hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 30px 32px;
+    margin-bottom: 24px;
+    border-radius: var(--gx-radius);
+    border: 1px solid var(--gx-border);
+    background: var(--gx-bg-card);
+    overflow: hidden;
+    box-shadow: var(--gx-shadow-sm);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.pf-hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(520px 240px at 90% -40%, rgba(0, 198, 255, 0.16), transparent 60%),
+        radial-gradient(440px 220px at 5% 130%, rgba(123, 47, 247, 0.18), transparent 60%);
+    pointer-events: none;
+}
+
+.pf-avatar-large {
+    width: 92px;
+    height: 92px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 26px;
+    background: var(--gx-gradient);
+    color: #fff;
+    font-family: var(--gx-font-display);
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: 0 0 34px rgba(0, 198, 255, 0.4);
+    position: relative;
+    z-index: 1;
+}
+
+.pf-avatar-large::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    pointer-events: none;
+}
+
+.pf-hero-copy {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+    flex: 1;
+}
+
+.pf-hero-copy h1 {
+    margin: 12px 0 4px;
+    font-family: var(--gx-font-display);
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: var(--gx-text);
+}
+
+.pf-hero-copy .pf-handle {
+    margin: 0 0 14px;
+    color: var(--gx-muted);
+    font-size: 14px;
+}
+
+.pf-handle span {
+    margin: 0 6px;
+    opacity: 0.5;
+}
+
+.pf-hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.pf-sec-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 13px;
+    border-radius: var(--gx-radius-pill);
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.pf-sec-excellent {
+    background: rgba(0, 230, 118, 0.14);
+    color: var(--gx-success);
+    border: 1px solid rgba(0, 230, 118, 0.35);
+}
+
+.pf-sec-good {
+    background: rgba(0, 198, 255, 0.14);
+    color: var(--gx-primary);
+    border: 1px solid rgba(0, 198, 255, 0.35);
+}
+
+.pf-sec-attention {
+    background: rgba(255, 200, 87, 0.14);
+    color: var(--gx-warning);
+    border: 1px solid rgba(255, 200, 87, 0.35);
+}
+
+.pf-hero-actions {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+
+/* ==========================================================
+   2. Statistics
+========================================================== */
+
+.pf-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.pf-stat-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px;
+    border-radius: var(--gx-radius);
+    border: 1px solid var(--gx-border);
+    background: var(--gx-bg-card);
+    box-shadow: var(--gx-shadow-sm);
+    overflow: hidden;
+    transition: border-color var(--gx-transition), transform var(--gx-transition), box-shadow var(--gx-transition);
+}
+
+.pf-stat-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+}
+
+.pf-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--gx-shadow);
+}
+
+.pf-stat-total::before { background: var(--gx-gradient); }
+.pf-stat-safe::before { background: var(--gx-success); }
+.pf-stat-suspicious::before { background: var(--gx-warning); }
+.pf-stat-high::before { background: var(--gx-danger); }
+
+.pf-stat-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    font-size: 19px;
+}
+
+.pf-stat-total .pf-stat-icon {
+    background: var(--gx-gradient-soft);
+    color: var(--gx-primary);
+    box-shadow: inset 0 0 0 1px rgba(0, 198, 255, 0.3);
+}
+
+.pf-stat-safe .pf-stat-icon {
+    background: rgba(0, 230, 118, 0.12);
+    color: var(--gx-success);
+    box-shadow: inset 0 0 0 1px rgba(0, 230, 118, 0.3);
+}
+
+.pf-stat-suspicious .pf-stat-icon {
+    background: rgba(255, 200, 87, 0.12);
+    color: var(--gx-warning);
+    box-shadow: inset 0 0 0 1px rgba(255, 200, 87, 0.3);
+}
+
+.pf-stat-high .pf-stat-icon {
+    background: rgba(255, 77, 109, 0.12);
+    color: var(--gx-danger);
+    box-shadow: inset 0 0 0 1px rgba(255, 77, 109, 0.3);
+}
+
+.pf-stat-info {
+    min-width: 0;
+    line-height: 1.3;
+}
+
+.pf-stat-label {
+    display: block;
+    font-size: 12.5px;
+    color: var(--gx-muted);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.pf-stat-info h3 {
+    margin: 3px 0 0;
+    font-family: var(--gx-font-display);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--gx-text);
+}
+
+.pf-stat-hint {
+    display: block;
+    margin-top: 2px;
+    font-size: 11.5px;
+    color: var(--gx-muted);
+}
+
+
+/* ==========================================================
+   3. Layout Grid
+========================================================== */
+
+.pf-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.pf-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+}
+
+.pf-card {
+    padding: 26px;
+}
+
+
+/* ==========================================================
+   4. Forms
+========================================================== */
+
+.pf-card .gx-card-header {
+    margin-bottom: 20px;
+}
+
+.pf-card .gx-card-header h3 {
+    margin: 0 0 4px;
+    font-family: var(--gx-font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gx-text);
+}
+
+.pf-card .gx-card-header h3 i {
+    margin-right: 8px;
+    color: var(--gx-primary);
+}
+
+.pf-card .gx-card-header p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--gx-muted);
+}
+
+.pf-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.pf-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.pf-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gx-text-soft);
+}
+
+.pf-field .gx-input:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.pf-field-note {
+    font-size: 12px;
+    color: var(--gx-muted);
+    line-height: 1.5;
+}
+
+.pf-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.pf-msg {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    border-radius: var(--gx-radius-sm);
+    font-size: 13.5px;
+    font-weight: 500;
+}
+
+.pf-msg.show {
+    display: flex;
+}
+
+.pf-msg.pf-msg-success {
+    background: rgba(0, 230, 118, 0.1);
+    color: #7ef0b4;
+    border: 1px solid rgba(0, 230, 118, 0.3);
+}
+
+.pf-msg.pf-msg-error {
+    background: rgba(255, 77, 109, 0.1);
+    color: #ff9db1;
+    border: 1px solid rgba(255, 77, 109, 0.3);
+}
+
+.gx-form-error {
+    display: block;
+    margin-top: -4px;
+    font-size: 12px;
+    color: #ff9db1;
+}
+
+.gx-input.is-invalid {
+    border-color: var(--gx-danger);
+    box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.15);
+}
+
+
+/* ==========================================================
+   5. Account Security
+========================================================== */
+
+.pf-sec-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pf-sec-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: var(--gx-radius-sm);
+    border: 1px solid var(--gx-border);
+    background: rgba(255, 255, 255, 0.03);
+    transition: border-color var(--gx-transition), background var(--gx-transition);
+}
+
+.pf-sec-item:hover {
+    border-color: rgba(0, 198, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.pf-sec-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    font-size: 17px;
+}
+
+.pf-ic-cyan { background: rgba(0, 198, 255, 0.12); color: var(--gx-primary); }
+.pf-ic-purple { background: rgba(123, 47, 247, 0.14); color: #a78bfa; }
+.pf-ic-green { background: rgba(0, 230, 118, 0.12); color: var(--gx-success); }
+.pf-ic-amber { background: rgba(255, 200, 87, 0.12); color: var(--gx-warning); }
+.pf-ic-red { background: rgba(255, 77, 109, 0.12); color: var(--gx-danger); }
+
+.pf-sec-meta {
+    flex: 1;
+    min-width: 0;
+    line-height: 1.4;
+}
+
+.pf-sec-meta strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gx-text);
+}
+
+.pf-sec-meta span {
+    display: block;
+    font-size: 12.5px;
+    color: var(--gx-muted);
+}
+
+.pf-dot-sec {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background: var(--gx-success);
+    box-shadow: 0 0 8px currentColor;
+    color: var(--gx-success);
+    vertical-align: 1px;
+}
+
+.pf-sec-actions {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--gx-border);
+}
+
+.gx-btn-sm {
+    padding: 7px 12px;
+    font-size: 12.5px;
+}
+
+
+/* ==========================================================
+   6. Quick Actions
+========================================================== */
+
+.pf-quick-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.pf-quick-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 14px;
+    border-radius: var(--gx-radius-sm);
+    border: 1px solid var(--gx-border);
+    background: rgba(255, 255, 255, 0.03);
+    text-decoration: none;
+    transition: transform var(--gx-transition), border-color var(--gx-transition), background var(--gx-transition);
+}
+
+.pf-quick-link:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 198, 255, 0.3);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.pf-quick-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    font-size: 15px;
+}
+
+.pf-qc-cyan .pf-quick-icon { background: rgba(0, 198, 255, 0.12); color: var(--gx-primary); }
+.pf-qc-blue .pf-quick-icon { background: rgba(59, 130, 246, 0.14); color: #60a5fa; }
+.pf-qc-purple .pf-quick-icon { background: rgba(123, 47, 247, 0.14); color: #a78bfa; }
+.pf-qc-green .pf-quick-icon { background: rgba(0, 230, 118, 0.12); color: var(--gx-success); }
+.pf-qc-red .pf-quick-icon { background: rgba(255, 77, 109, 0.12); color: var(--gx-danger); }
+.pf-qc-amber .pf-quick-icon { background: rgba(255, 200, 87, 0.12); color: var(--gx-warning); }
+
+.pf-quick-link span:last-child {
+    min-width: 0;
+    line-height: 1.35;
+}
+
+.pf-quick-link strong {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--gx-text);
+}
+
+.pf-quick-link small {
+    display: block;
+    font-size: 11.5px;
+    color: var(--gx-muted);
+}
+
+
+/* ==========================================================
+   7. Statistics Detail
+========================================================== */
+
+.pf-analy-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.pf-analy-dot {
+    width: 10px;
+    height: 10px;
+    flex-shrink: 0;
+    border-radius: 50%;
+}
+
+.pf-dot-safe { background: var(--gx-success); box-shadow: 0 0 8px rgba(0, 230, 118, 0.6); }
+.pf-dot-suspicious { background: var(--gx-warning); box-shadow: 0 0 8px rgba(255, 200, 87, 0.6); }
+.pf-dot-high { background: var(--gx-danger); box-shadow: 0 0 8px rgba(255, 77, 109, 0.6); }
+
+.pf-analy-label {
+    width: 86px;
+    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gx-text-soft);
+}
+
+.pf-analy-track {
+    flex: 1;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+}
+
+.pf-analy-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.6s ease;
+}
+
+.pf-fill-safe { background: linear-gradient(90deg, #00E676, #4ade80); }
+.pf-fill-suspicious { background: linear-gradient(90deg, #FFC857, #fbbf24); }
+.pf-fill-high { background: linear-gradient(90deg, #FF4D6D, #fb7185); }
+
+.pf-analy-pct {
+    width: 42px;
+    flex-shrink: 0;
+    text-align: right;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--gx-muted);
+}
+
+.pf-analy-summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: var(--gx-radius-sm);
+    background: rgba(0, 198, 255, 0.06);
+    border: 1px solid rgba(0, 198, 255, 0.16);
+}
+
+.pf-analy-summary i {
+    color: var(--gx-primary);
+}
+
+.pf-analy-summary p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--gx-text-soft);
+}
+
+.pf-analy-summary strong {
+    color: var(--gx-text);
+}
+
+
+/* ==========================================================
+   8. Change Password Modal
+========================================================== */
+
+.pf-modal-content {
+    background: linear-gradient(180deg, #0d1224 0%, #080d1c 100%);
+    border: 1px solid var(--gx-border);
+    border-radius: var(--gx-radius);
+    box-shadow: var(--gx-shadow);
+    color: var(--gx-text);
+}
+
+.pf-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 0;
+}
+
+.pf-modal-head h3 {
+    margin: 0;
+    font-family: var(--gx-font-display);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.pf-modal-head h3 i {
+    margin-right: 8px;
+    color: var(--gx-primary);
+}
+
+.pf-modal-body {
+    padding: 20px 24px 24px;
+}
+
+.pf-pw-wrap {
+    position: relative;
+}
+
+.pf-pw-wrap .gx-input {
+    padding-right: 46px;
+}
+
+.pf-pw-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--gx-muted);
+    cursor: pointer;
+    font-size: 14px;
+    transition: color var(--gx-transition), background var(--gx-transition);
+}
+
+.pf-pw-toggle:hover {
+    color: var(--gx-primary);
+    background: rgba(0, 198, 255, 0.08);
+}
+
+.pf-strength {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.pf-strength-track {
+    flex: 1;
+    height: 7px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    overflow: hidden;
+}
+
+.pf-strength-bar {
+    display: block;
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: var(--gx-danger);
+    transition: width 0.25s ease, background 0.25s ease;
+}
+
+.pf-strength-text {
+    flex-shrink: 0;
+    min-width: 120px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gx-muted);
+}
+
+.pf-modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 6px;
+}
+
+
+/* ==========================================================
+   9. Compact Layout Preference
+========================================================== */
+
+body.gx-compact {
+    --gx-sidebar-w: 236px;
+    --gx-topbar-h: 62px;
+}
+
+body.gx-compact .gx-main {
+    padding: 18px 22px 28px;
+}
+
+body.gx-compact .gx-card {
+    padding: 20px;
+}
+
+body.gx-compact .gx-topbar {
+    margin-bottom: 18px;
+}
+
+body.gx-compact .pf-hero {
+    padding: 22px 24px;
+}
+
+body.gx-compact .pf-avatar-large {
+    width: 72px;
+    height: 72px;
+    font-size: 30px;
+    border-radius: 20px;
+}
+
+body.gx-compact .pf-stat-card {
+    padding: 16px;
+}
+
+
+/* ==========================================================
+   10. Reduced Motion Preference
+========================================================== */
+
+body.gx-no-motion *,
+body.gx-no-motion *::before,
+body.gx-no-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+}
+
+
+/* ==========================================================
+   11. Responsive
+========================================================== */
+
+@media (max-width: 1199px) {
+    .pf-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pf-quick-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 991px) {
+    .pf-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 575px) {
+    .pf-hero {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 24px 20px;
+    }
+
+    .pf-avatar-large {
+        width: 74px;
+        height: 74px;
+        font-size: 30px;
+        border-radius: 20px;
+    }
+
+    .pf-hero-copy h1 {
+        font-size: 24px;
+    }
+
+    .pf-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .pf-form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .pf-quick-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pf-card {
+        padding: 20px;
+    }
+}

@@ -1,0 +1,636 @@
+/* ==========================================================
+   GuardianX Settings Page (settings.css)
+   Clean two-column layout: category nav on the left, setting
+   cards on the right. Stacks on mobile.
+========================================================== */
+
+
+/* ==========================================================
+   1. Save Status Toast
+========================================================== */
+
+.st-save-status {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 1080;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: var(--gx-radius-sm);
+    background: rgba(0, 230, 118, 0.12);
+    border: 1px solid rgba(0, 230, 118, 0.35);
+    color: #7ef0b4;
+    font-size: 13.5px;
+    font-weight: 600;
+    box-shadow: var(--gx-shadow);
+    opacity: 0;
+    transform: translateY(-12px);
+    pointer-events: none;
+    transition: opacity var(--gx-transition), transform var(--gx-transition);
+}
+
+.st-save-status.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.st-save-status.st-save-error {
+    background: rgba(255, 77, 109, 0.12);
+    border-color: rgba(255, 77, 109, 0.35);
+    color: #ff9db1;
+}
+
+
+/* ==========================================================
+   2. Layout
+========================================================== */
+
+.st-layout {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.st-panels {
+    min-width: 0;
+}
+
+.st-panel {
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+    animation: st-fade-in 0.3s ease both;
+}
+
+.st-panel.active {
+    display: flex;
+}
+
+@keyframes st-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.st-panel-head h2 {
+    margin: 0 0 4px;
+    font-family: var(--gx-font-display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gx-text);
+}
+
+.st-panel-head p {
+    margin: 0 0 16px;
+    font-size: 13px;
+    color: var(--gx-muted);
+}
+
+
+/* ==========================================================
+   3. Category Navigation
+========================================================== */
+
+.st-nav {
+    position: sticky;
+    top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 18px 14px;
+    border-radius: var(--gx-radius);
+    border: 1px solid var(--gx-border);
+    background: var(--gx-bg-card);
+    box-shadow: var(--gx-shadow-sm);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.st-nav-label {
+    margin: 2px 12px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--gx-muted);
+}
+
+.st-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 14px;
+    border: none;
+    border-radius: var(--gx-radius-sm);
+    background: transparent;
+    color: var(--gx-text-soft);
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--gx-transition), color var(--gx-transition), transform var(--gx-transition);
+}
+
+.st-nav-btn i {
+    width: 20px;
+    text-align: center;
+    color: var(--gx-muted);
+    transition: color var(--gx-transition);
+}
+
+.st-nav-btn:hover {
+    background: var(--gx-surface);
+    color: #fff;
+    transform: translateX(3px);
+}
+
+.st-nav-btn:hover i {
+    color: var(--gx-primary);
+}
+
+.st-nav-btn.active {
+    background: var(--gx-gradient-soft);
+    color: #fff;
+    box-shadow: inset 0 0 0 1px rgba(0, 198, 255, 0.35);
+}
+
+.st-nav-btn.active i {
+    color: var(--gx-primary);
+}
+
+
+/* ==========================================================
+   4. Setting Cards
+========================================================== */
+
+.st-card {
+    padding: 24px;
+}
+
+.st-card-head {
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--gx-border);
+}
+
+.st-card-head h3 {
+    margin: 0 0 4px;
+    font-family: var(--gx-font-display);
+    font-size: 16.5px;
+    font-weight: 700;
+    color: var(--gx-text);
+}
+
+.st-card-head h3 i {
+    margin-right: 8px;
+    color: var(--gx-primary);
+}
+
+.st-card-head p {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--gx-muted);
+}
+
+.st-setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 14px 0;
+}
+
+.st-setting-row + .st-setting-row {
+    border-top: 1px solid var(--gx-border);
+}
+
+.st-setting-copy {
+    min-width: 0;
+    line-height: 1.4;
+}
+
+.st-setting-copy strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gx-text);
+}
+
+.st-setting-copy small {
+    display: block;
+    margin-top: 3px;
+    font-size: 12.5px;
+    color: var(--gx-muted);
+    max-width: 520px;
+}
+
+
+/* ==========================================================
+   5. Toggle Switches
+========================================================== */
+
+.st-switch {
+    position: relative;
+    flex-shrink: 0;
+    width: 50px;
+    height: 28px;
+    cursor: pointer;
+}
+
+.st-switch input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.st-slider {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--gx-border);
+    transition: background var(--gx-transition), border-color var(--gx-transition), box-shadow var(--gx-transition);
+}
+
+.st-slider::before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--gx-muted);
+    transition: transform var(--gx-transition), background var(--gx-transition), box-shadow var(--gx-transition);
+}
+
+.st-switch input:checked + .st-slider {
+    background: var(--gx-gradient);
+    border-color: transparent;
+    box-shadow: 0 0 14px rgba(0, 198, 255, 0.35);
+}
+
+.st-switch input:checked + .st-slider::before {
+    transform: translateX(22px);
+    background: #fff;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+.st-switch input:focus-visible + .st-slider {
+    outline: 2px solid var(--gx-primary);
+    outline-offset: 2px;
+}
+
+
+/* ==========================================================
+   6. Select
+========================================================== */
+
+.st-select select {
+    min-width: 180px;
+    padding: 11px 38px 11px 14px;
+    border-radius: var(--gx-radius-sm);
+    border: 1px solid var(--gx-border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--gx-text);
+    font-size: 13.5px;
+    font-weight: 500;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394A3B8'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    transition: border-color var(--gx-transition), box-shadow var(--gx-transition);
+}
+
+.st-select select:focus {
+    border-color: var(--gx-primary);
+    box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.18);
+}
+
+.st-select select option {
+    background: #0d1224;
+    color: var(--gx-text);
+}
+
+
+/* ==========================================================
+   7. Login Protection
+========================================================== */
+
+.st-protect-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.st-protect-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: var(--gx-radius-sm);
+    border: 1px solid var(--gx-border);
+    background: rgba(255, 255, 255, 0.03);
+    transition: border-color var(--gx-transition);
+}
+
+.st-protect-item.is-done {
+    border-color: rgba(0, 230, 118, 0.25);
+}
+
+.st-protect-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    font-size: 16px;
+    background: rgba(255, 200, 87, 0.12);
+    color: var(--gx-warning);
+}
+
+.st-protect-item.is-done .st-protect-icon {
+    background: rgba(0, 230, 118, 0.12);
+    color: var(--gx-success);
+}
+
+.st-protect-meta {
+    flex: 1;
+    min-width: 0;
+    line-height: 1.4;
+}
+
+.st-protect-meta strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gx-text);
+}
+
+.st-protect-meta small {
+    font-size: 12.5px;
+    color: var(--gx-muted);
+}
+
+
+/* ==========================================================
+   8. Privacy
+========================================================== */
+
+.st-card-danger {
+    border-color: rgba(255, 77, 109, 0.28);
+}
+
+.st-btn-danger {
+    background: rgba(255, 77, 109, 0.14);
+    border: 1px solid rgba(255, 77, 109, 0.4);
+    color: #ff8aa0;
+}
+
+.st-btn-danger:hover {
+    background: var(--gx-danger);
+    color: #fff;
+    box-shadow: 0 0 18px rgba(255, 77, 109, 0.4);
+}
+
+.st-data-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.st-data-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border-radius: var(--gx-radius-sm);
+    border: 1px solid var(--gx-border);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.st-data-item i {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--gx-gradient-soft);
+    color: var(--gx-primary);
+    font-size: 15px;
+}
+
+.st-data-item span {
+    min-width: 0;
+    line-height: 1.35;
+}
+
+.st-data-item strong {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--gx-text);
+}
+
+.st-data-item small {
+    display: block;
+    font-size: 12px;
+    color: var(--gx-muted);
+}
+
+.st-notes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.st-notes li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13.5px;
+    color: var(--gx-text-soft);
+}
+
+.st-notes li i {
+    color: var(--gx-success);
+}
+
+
+/* ==========================================================
+   9. Modal
+========================================================== */
+
+.st-modal-content {
+    background: linear-gradient(180deg, #0d1224 0%, #080d1c 100%);
+    border: 1px solid var(--gx-border);
+    border-radius: var(--gx-radius);
+    box-shadow: var(--gx-shadow);
+    color: var(--gx-text);
+}
+
+.st-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 0;
+}
+
+.st-modal-head h3 {
+    margin: 0;
+    font-family: var(--gx-font-display);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.st-modal-head h3 i {
+    margin-right: 8px;
+    color: var(--gx-danger);
+}
+
+.st-modal-body {
+    padding: 20px 24px 8px;
+    text-align: center;
+}
+
+.st-clear-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 14px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(255, 77, 109, 0.12);
+    color: var(--gx-danger);
+    font-size: 26px;
+    box-shadow: 0 0 22px rgba(255, 77, 109, 0.25);
+}
+
+.st-modal-body p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--gx-text-soft);
+    line-height: 1.6;
+}
+
+.st-modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 24px 20px;
+}
+
+
+/* ==========================================================
+   10. Compact Layout Preference
+========================================================== */
+
+body.gx-compact {
+    --gx-sidebar-w: 236px;
+    --gx-topbar-h: 62px;
+}
+
+body.gx-compact .gx-main {
+    padding: 18px 22px 28px;
+}
+
+body.gx-compact .gx-card {
+    padding: 20px;
+}
+
+body.gx-compact .gx-topbar {
+    margin-bottom: 18px;
+}
+
+
+/* ==========================================================
+   11. Reduced Motion Preference
+========================================================== */
+
+body.gx-no-motion *,
+body.gx-no-motion *::before,
+body.gx-no-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+}
+
+
+/* ==========================================================
+   12. Responsive
+========================================================== */
+
+@media (max-width: 1199px) {
+    .st-layout {
+        grid-template-columns: 200px minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 991px) {
+    .st-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .st-nav {
+        position: static;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 12px;
+    }
+
+    .st-nav-label {
+        width: 100%;
+        margin-bottom: 2px;
+    }
+
+    .st-nav-btn {
+        width: auto;
+        padding: 10px 14px;
+    }
+}
+
+@media (max-width: 575px) {
+    .st-setting-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .st-select select {
+        width: 100%;
+    }
+
+    .st-data-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .st-card {
+        padding: 20px;
+    }
+
+    .st-save-status {
+        left: 14px;
+        right: 14px;
+        top: 14px;
+    }
+}
